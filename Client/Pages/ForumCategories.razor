@@ -1,21 +1,12 @@
-﻿@page "/Categories"
+﻿@using System.Net.Http
+@inject HttpClient Http
+@page "/Categories"
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 <h3>ForumCategories</h3>
 
-<form>
-    <input type="text"/>
 
-</form>
 @code {
 
-    public string Title { get; set; }
 
-    public class Categories
-    {
 
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-
-    }
 }
