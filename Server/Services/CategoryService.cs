@@ -17,7 +17,6 @@ namespace ForumSnackis.Server.Services
             dbContext = DbContext;
         }
 
-
         public async Task<List<ForumCategory>> GetAsync()
         {                    
             return await dbContext.ForumCategories.ToListAsync();            
