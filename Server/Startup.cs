@@ -51,15 +51,8 @@ namespace ForumSnackis.Server
 
             services.AddScoped<CategoryService>();
 
-            services.AddHttpClient("PublicAPI", client => {
-                client.BaseAddress = new Uri("https://localhost:44317/");
-            });
+            services.AddHttpClient();
 
-            services.AddHttpClient("PrivateAPI", client =>
-            {
-                client.BaseAddress = new Uri("https://localhost:44317/");
-            })
-                .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

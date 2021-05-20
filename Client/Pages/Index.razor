@@ -1,5 +1,5 @@
 ﻿@using System.Net.Http
-@inject IHttpClientFactory HttpFactory
+@inject HttpClient Http
 @page "/"
   
         @foreach (var item in categories)
@@ -17,17 +17,19 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var Http = HttpFactory.CreateClient("PublicAPI");
-        var request = await Http.GetAsync("api/Category");
+        using var PublicHttp = new HttpClient();
+
+        PublicHttp.BaseAddress = Http.BaseAddress;
+        
+
+        var request = await PublicHttp.GetAsync("api/Category");
 
         if (request.IsSuccessStatusCode)
         {
             categories = await request.Content.ReadFromJsonAsync<List<string>>();
         }
 
-
-
-
+        await Http.DeleteAsync("api/Category/1");
 
     }
 }
