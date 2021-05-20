@@ -1,5 +1,6 @@
 using ForumSnackis.Server.Data;
 using ForumSnackis.Server.Models;
+using ForumSnackis.Server.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -43,6 +44,8 @@ namespace ForumSnackis.Server
 
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            services.AddScoped<CategoryService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

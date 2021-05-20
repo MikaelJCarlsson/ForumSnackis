@@ -1,5 +1,6 @@
 ﻿using ForumSnackis.Server.Data;
 using ForumSnackis.Server.Models;
+using ForumSnackis.Server.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -16,27 +17,31 @@ namespace ForumSnackis.Server.Controllers
     [ApiController]
     public class CategoryController : ControllerBase
     {
-        private readonly ApplicationDbContext dbContext;
+        private readonly CategoryService service;
 
-        public CategoryController(ApplicationDbContext DbContext)
+        public CategoryController(CategoryService service)
         {
-            dbContext = DbContext;
+            this.service = service;
         }
 
         // GET: api/<CategoryController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IActionResult> Get()
         {
-            return new string[] { "value1", "value2" };
+            var categories = await service.GetAsync();
+            if (categories is not null)
+                return Ok(categories);
+            else return NotFound();
         }
 
         // GET api/<CategoryController>/5
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            var category = dbContext.ForumCategories.Find(id);
+
+            var category = await service.GetAsync(id);
             if (category is not null)
-                return Ok(JsonSerializer.Serialize(category));
+                return Ok(category);
             else
                 return NotFound();
 
@@ -45,37 +50,39 @@ namespace ForumSnackis.Server.Controllers
         // POST api/<CategoryController>
         [HttpPost]
         [Authorize]
-        public IActionResult Post([FromBody] string value)
+        public async Task<IActionResult> Post([FromBody] string value)
         {
-            dbContext.ForumCategories.Add(new ForumCategory() { Title = value });
-            dbContext.SaveChanges();
-            //Created
-            return StatusCode(202);
+          var result = await service.CreateAsync(value);
+            if(result == 0)
+                //Internal Server Error
+                return StatusCode(500);          
+            else
+                //Created
+                return StatusCode(202);
         }
 
         // PUT api/<CategoryController>/5
         [HttpPut("{id}")]
         [Authorize]
-        public IActionResult Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put(int id, [FromBody] string value)
         {
-            return StatusCode(501);
+            var result = await service.UpdateAsync(id, value);
+            if (result == 1)
+                return Ok();
+            else
+                return StatusCode(409);
         }
 
         // DELETE api/<CategoryController>/5
         [HttpDelete("{id}")]
         [Authorize]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var category = dbContext.ForumCategories.Find(id);
-            if (category is not null)
-            {
-                dbContext.ForumCategories.Remove(category);
-                dbContext.SaveChanges();
+            var category = await service.DeleteAsync(id);
+            if (category == 1)
                 return Ok();
-            } else
-            {
+            else
                 return NotFound();
-            }
         }
     }
 }
