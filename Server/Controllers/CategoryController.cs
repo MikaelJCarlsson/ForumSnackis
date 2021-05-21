@@ -41,6 +41,7 @@ namespace ForumSnackis.Server.Controllers
 
             var category = await service.GetAsync(id);
             if (category is not null)
+                
                 return Ok(category);
             else
                 return NotFound();
