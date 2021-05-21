@@ -22,7 +22,7 @@ namespace ForumSnackis.Client.Shared
             if (Category is null)
             {
                 var publicHttp = HttpFactory.CreateClient("public");
-                var request = await publicHttp.GetAsync("api/Category/Subjects/{CategoryId}");
+                var request = await publicHttp.GetAsync($"api/Category/Subjects/{CategoryId}");
 
                 if (request.IsSuccessStatusCode)
                 {
