@@ -50,6 +50,7 @@ namespace ForumSnackis.Server
             services.AddRazorPages();
 
             services.AddScoped<CategoryService>();
+            services.AddScoped<SubjectService>();
 
             services.AddHttpClient();
 

@@ -1,0 +1,19 @@
+﻿
+<table class="table">
+    <thead>
+    </thead>
+    <tbody>
+        @if (categories is not null)
+        {
+            @foreach (var item in categories)
+            {
+                <tr>
+                    <th scope="row">
+                        <p>@item</p>
+                    </th>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+

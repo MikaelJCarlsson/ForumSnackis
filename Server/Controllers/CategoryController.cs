@@ -67,7 +67,7 @@ namespace ForumSnackis.Server.Controllers
         public async Task<IActionResult> Put(int id, [FromBody] string value)
         {
             var result = await service.UpdateAsync(id, value);
-            if (result == 1)
+            if (result >= 1)
                 return Ok();
             else
                 return StatusCode(409);
