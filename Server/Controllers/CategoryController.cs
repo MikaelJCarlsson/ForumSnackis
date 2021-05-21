@@ -47,6 +47,16 @@ namespace ForumSnackis.Server.Controllers
                 return NotFound();
 
         }
+        [HttpGet("Subjects/{id}")]
+        public async Task<IActionResult> GetSubjectsInCategory(int id)
+        {
+            var category = await service.GetSubjectsInCategory(id);
+            if (category is not null)
+                return Ok(category);
+            else
+                return NotFound();
+
+        }
 
         // POST api/<CategoryController>
         [HttpPost]

@@ -54,6 +54,40 @@ namespace ForumSnackis.Server.Services
             dbContext.Add(fc);
             return await dbContext.SaveChangesAsync();
         }
+
+        public async Task<CategoryDTO> GetSubjectsInCategory(int id)
+        {
+            try
+            {
+                ForumCategory category = await dbContext.ForumCategories.Include(x => x.Subjects)
+                    .ThenInclude(x => x.CreatedBy)
+                    .Include(x => x.Subjects)
+                    .ThenInclude(x => x.Posts)
+                    .Where(x => x.Id == id)
+                    .FirstOrDefaultAsync();
+
+                CategoryDTO result = new();
+                result.Id = category.Id;
+                result.Title = category.Title;
+                result.subjects = new();
+
+                category.Subjects
+                    .ForEach(x =>
+                    result.subjects.Add(new SubjectsDTO()
+                    {
+                        Title = x.SubjectTitle,
+                        CreatedBy = x.CreatedBy.UserName,
+                        PostAmount = x.Posts.Count(),
+                        TimeStamp = x.SubjectDate
+                    }));
+
+                return result;
+            } catch(Exception)
+            {
+                return null;
+            }
+        }
+
         public async Task<int> UpdateAsync(int id, string title, List<Subject> subjects = null)
         {
             try
