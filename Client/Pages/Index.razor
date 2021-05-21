@@ -1,36 +1,10 @@
 ﻿@using System.Net.Http
-@inject IHttpClientFactory HttpFactory
 @page "/"
-  
-        @foreach (var item in categories)
-        {
-            <p>@item</p>
-        }
-
 <h1>Hello, world!</h1>
+<CategoriesComponent></CategoriesComponent>
 
 
-
-@code {
-
-    private List<string> categories = new();
-
-    protected override async Task OnInitializedAsync()
-    {
-
-        var publicHttp = HttpFactory.CreateClient();
-        var privateHttp = HttpFactory.CreateClient("ForumSnackis.ServerAPI");
-
-        publicHttp.BaseAddress = privateHttp.BaseAddress;
-
-        var request = await publicHttp.GetAsync("api/Category");
-
-        if (request.IsSuccessStatusCode)
-        {
-            categories = await request.Content.ReadFromJsonAsync<List<string>>();
-        }
-
+    @code {
 
 
     }
-}

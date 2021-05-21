@@ -25,7 +25,19 @@ namespace ForumSnackis.Server.Services
         }
         public async Task<ForumCategory> GetAsync(int id)
         {
-            return await dbContext.ForumCategories.FindAsync(id);
+            try
+            {
+                var result = await dbContext.ForumCategories.Include(x => x.Subjects).Where(x => x.Id == id).FirstOrDefaultAsync();
+                if (result is default(ForumCategory))
+                    return null;
+                else
+                    return result;
+            }
+            catch(ArgumentNullException)
+            {
+                return null;
+            }
+
         }
         public async Task<int> CreateAsync(string title)
         {
@@ -34,16 +46,26 @@ namespace ForumSnackis.Server.Services
             dbContext.Add(fc);
             return await dbContext.SaveChangesAsync();
         }
-        public async Task<int> UpdateAsync(int id, string title)
+        public async Task<int> UpdateAsync(int id, string title, List<Subject> subjects = null)
         {
-            var category = await dbContext.ForumCategories.FindAsync(id);
-            if(category is null)
+            try
+            {
+                var category = await dbContext.ForumCategories.Include(x => x.Subjects).Where(x => x.Id == id).FirstOrDefaultAsync();
+                if (category is null)
+                    return 0;
+
+                category.Title = title;
+
+                if (subjects is not null)
+                {
+                    category.Subjects = subjects;
+                }
+                dbContext.Update(category);
+                return await dbContext.SaveChangesAsync();
+            } catch(Exception)
+            {
                 return 0;
-
-            category.Title = title;
-
-            dbContext.Update(category);
-            return await dbContext.SaveChangesAsync();
+            }
         }
 
         public async Task<int> DeleteAsync(int id)
