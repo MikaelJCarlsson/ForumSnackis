@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using ForumSnackis.Shared.DTO;
 
 namespace ForumSnackis.Server.Services
 {
@@ -17,16 +19,23 @@ namespace ForumSnackis.Server.Services
             dbContext = DbContext;
         }
 
-        public async Task<Subject> GetAsync(int id)
+        public async Task<SubjectsDTO> GetAsync(int id)
         {
             try
             {
                 var result = await dbContext.Subjects.Include(x => x.Posts)
                     .Include(x => x.CreatedBy)
                     .Where(x => x.Id == id)
+                    .Select(x => new SubjectsDTO 
+                    {
+                        Title = x.SubjectTitle, 
+                        TimeStamp = x.SubjectDate, 
+                        CreatedBy = x.CreatedBy.NormalizedUserName, 
+                        PostAmount = x.Posts.Count() 
+                    })                    
                     .FirstOrDefaultAsync();
 
-                if (result is default(Subject))
+                if (result is default(SubjectsDTO))
                     return null;
                 else
                     return result;

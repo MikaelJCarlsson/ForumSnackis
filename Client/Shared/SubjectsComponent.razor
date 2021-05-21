@@ -1,0 +1,18 @@
+﻿<table class="table">
+    <thead>
+    </thead>
+    <tbody>
+        @if (subjects is not null)
+        {
+            @foreach (var s in subjects)
+            {
+                <tr>
+                    <th scope="row">
+                        <p>@s</p>
+                    </th>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+

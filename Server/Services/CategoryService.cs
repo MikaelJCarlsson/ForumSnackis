@@ -1,5 +1,6 @@
 ﻿using ForumSnackis.Server.Data;
 using ForumSnackis.Server.Models;
+using ForumSnackis.Shared.DTO;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -23,12 +24,19 @@ namespace ForumSnackis.Server.Services
             return await dbContext.ForumCategories.Select(x => x.Title).ToListAsync();
                       
         }
-        public async Task<ForumCategory> GetAsync(int id)
+        public async Task<CategoryDTO> GetAsync(int id)
         {
             try
             {
-                var result = await dbContext.ForumCategories.Include(x => x.Subjects).Where(x => x.Id == id).FirstOrDefaultAsync();
-                if (result is default(ForumCategory))
+                var result = await dbContext.ForumCategories.Include(x => x.Subjects).Where(x => x.Id == id)
+                    .Select(x => new CategoryDTO
+                    {
+                        Id = x.Id,
+                        Title = x.Title
+                    })
+                    .FirstOrDefaultAsync();
+
+                if (result is default(CategoryDTO))
                     return null;
                 else
                     return result;
