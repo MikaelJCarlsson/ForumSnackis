@@ -20,9 +20,7 @@ namespace ForumSnackis.Server.Services
 
         public async Task<List<string>> GetAsync()
         {
-            //await dbContext.ForumCategories.ToListAsync();
-            return await dbContext.ForumCategories.Select(x => x.Title).ToListAsync();
-                      
+            return await dbContext.ForumCategories.Select(x => x.Title).ToListAsync();                     
         }
         public async Task<CategoryDTO> GetAsync(int id)
         {
