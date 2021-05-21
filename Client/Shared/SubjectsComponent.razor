@@ -1,8 +1,9 @@
-﻿<table class="table">
+﻿<h1>subjects</h1>
+<table class="table">
     <thead>
     </thead>
     <tbody>
-        @if (Category.subjects is not null)
+        @if (Category is not null && Category.subjects is not null)
         {
             @foreach (var s in Category.subjects)
             {
