@@ -2,15 +2,24 @@
     <thead>
     </thead>
     <tbody>
-        @if (subjects is not null)
+        @if (Category.subjects is not null)
         {
-            @foreach (var s in subjects)
+            @foreach (var s in Category.subjects)
             {
-                <tr>
-                    <th scope="row">
-                        <p>@s</p>
-                    </th>
-                </tr>
+        <tr>
+            <th scope="row">
+                <p>@s.Title</p>
+            </th>
+            <th scope="row">
+                <p>@s.TimeStamp.ToShortDateString()</p>
+            </th>
+            <th scope="row">
+                <p>@s.CreatedBy</p>
+            </th>
+            <th scope="row">
+                <p>@s.PostAmount</p>
+            </th>
+        </tr>
             }
         }
     </tbody>
