@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using ForumSnackis.Shared.DTO;
+using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +12,20 @@ namespace ForumSnackis.Client.Shared
     public partial class CategoriesComponent : ComponentBase
     {
 
-        private List<string> categories;
+        [Parameter]
+        public int CurrentPageState { get; set; } 
+
+
+        private List<CategoryDTO> categories;
+        [Parameter]
+        public CategoryDTO Category { get; set; }
+        [Parameter]
+        public EventCallback<CategoryDTO> CategoryChanged { get; set; }
         [Inject]
         public IHttpClientFactory HttpFactory { get; set; }
+
+
+
         protected override async Task OnInitializedAsync()
         {
 
@@ -24,9 +36,21 @@ namespace ForumSnackis.Client.Shared
 
                 if (request.IsSuccessStatusCode)
                 {
-                    categories = await request.Content.ReadFromJsonAsync<List<string>>();
+                    categories = await request.Content.ReadFromJsonAsync<List<CategoryDTO>>();
                 }
             }
+        }
+        public async void GetContent(int id)
+        {
+            var publicHttp = HttpFactory.CreateClient("public");
+            var request = await publicHttp.GetAsync($"api/Category/{id}");
+
+            if (request.IsSuccessStatusCode)
+            {
+                Category = await request.Content.ReadFromJsonAsync<CategoryDTO>();
+                await CategoryChanged.InvokeAsync(Category);
+            }
+
         }
     }
 }

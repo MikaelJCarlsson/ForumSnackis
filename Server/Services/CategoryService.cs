@@ -18,9 +18,20 @@ namespace ForumSnackis.Server.Services
             dbContext = DbContext;
         }
 
-        public async Task<List<string>> GetAsync()
+        public async Task<List<CategoryDTO>> GetAsync()
         {
-            return await dbContext.ForumCategories.Select(x => x.Title).ToListAsync();                     
+            var categories = await dbContext.ForumCategories.Select(x => new { x.Id, x.Title }).ToListAsync();
+            var listOfCategories = new List<CategoryDTO>();
+            foreach (var c in categories)
+            {
+                listOfCategories.Add(new CategoryDTO() 
+                {
+                    Id = c.Id, 
+                    Title = c.Title
+                });
+            }
+
+            return listOfCategories;                             
         }
         public async Task<CategoryDTO> GetAsync(int id)
         {

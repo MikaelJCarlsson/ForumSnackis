@@ -8,8 +8,8 @@
             @foreach (var item in categories)
             {
                 <tr>
-                    <th scope="row">
-                        <p>@item</p>
+                    <th scope="row" >
+                        <button @onclick="() => GetContent(item.Id)">@item.Title</button>
                     </th>
                 </tr>
             }
