@@ -10,19 +10,20 @@ namespace ForumSnackis.Client.Shared
 {
     public partial class SubjectsComponent : ComponentBase
     {
-        private CategoryDTO Category;
         [Parameter]
-        public int CategoryId { get; set; }
+        public CategoryDTO Category { get; set; }
+        [Parameter]
+        public int CategoryId { get; set; } = 0;
         [Inject]
         public IHttpClientFactory HttpFactory { get; set; }
         public int SubjectsDTO { get; private set; }
 
-        protected override async Task OnInitializedAsync()
+        protected override async Task OnParametersSetAsync()
         {
-            if (Category is null)
+            if (Category is not null)
             {
                 var publicHttp = HttpFactory.CreateClient("public");
-                var request = await publicHttp.GetAsync($"api/Category/Subjects/{CategoryId}");
+                var request = await publicHttp.GetAsync($"api/Category/Subjects/{Category.Id}");
 
                 if (request.IsSuccessStatusCode)
                 {

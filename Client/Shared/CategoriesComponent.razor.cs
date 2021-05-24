@@ -15,10 +15,8 @@ namespace ForumSnackis.Client.Shared
         [Parameter]
         public int CurrentPageState { get; set; } 
 
-
         private List<CategoryDTO> categories;
-        [Parameter]
-        public CategoryDTO Category { get; set; }
+
         [Parameter]
         public EventCallback<CategoryDTO> CategoryChanged { get; set; }
         [Inject]
@@ -40,17 +38,11 @@ namespace ForumSnackis.Client.Shared
                 }
             }
         }
-        public async void GetContent(int id)
+        public async void GetContent(CategoryDTO category)
         {
-            var publicHttp = HttpFactory.CreateClient("public");
-            var request = await publicHttp.GetAsync($"api/Category/{id}");
 
-            if (request.IsSuccessStatusCode)
-            {
-                Category = await request.Content.ReadFromJsonAsync<CategoryDTO>();
-                await CategoryChanged.InvokeAsync(Category);
-            }
-
+            await CategoryChanged.InvokeAsync(category);
+           
         }
     }
 }
