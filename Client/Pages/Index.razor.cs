@@ -24,6 +24,11 @@ namespace ForumSnackis.Client.Pages
             Category = category;
             PageState = 2;
         }
+
+        private void NavigateHome()
+        {
+            PageState = 1;
+        }
     }
 
 }
