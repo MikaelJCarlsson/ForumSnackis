@@ -3,7 +3,12 @@
 @page "/"
 <h1>Hello, world!</h1>
 <button @onclick="NavigateHome">Home</button>
-<button @onclick="() => CategoryForm = true">Create new Category</button>
+<AuthorizeView Roles="Administrators">
+    <Authorized>
+        <button @onclick="() => CategoryForm = true">Create new Category</button>
+    </Authorized>
+</AuthorizeView>
+
 @if(CategoryForm == true)
 {
  <EditForm Model="NewCategory" OnSubmit="CreateCategory">
@@ -13,7 +18,7 @@
 }
 @if (PageState == 1)
 {
-    <CategoriesComponent @ref="cat" CategoryChanged="UpdateCategoryState"></CategoriesComponent>
+    <CategoriesComponent @ref="CategoriesRef" CategoryChanged="UpdateCategoryState"></CategoriesComponent>
 }
 else if (PageState == 2)
 {
@@ -23,5 +28,6 @@ else if (PageState == 3)
 {
 
 }
+
 
 
