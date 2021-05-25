@@ -44,5 +44,19 @@ namespace ForumSnackis.Client.Shared
             await CategoryChanged.InvokeAsync(category);
            
         }
+        public async void CreateCategory(string title)
+        {
+
+            var privateHttp = HttpFactory.CreateClient("private");
+            var result = await privateHttp.PostAsJsonAsync($"api/Category/", title);
+            if (result.IsSuccessStatusCode)
+            {
+                var publicHttp = HttpFactory.CreateClient("public");
+                var request = await publicHttp.GetAsync("api/Category");
+                categories = await request.Content.ReadFromJsonAsync<List<CategoryDTO>>();
+                StateHasChanged();
+            }
+
+        }
     }
 }
