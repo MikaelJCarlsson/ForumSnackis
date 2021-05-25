@@ -1,4 +1,6 @@
 ﻿using ForumSnackis.Server.Services;
+using ForumSnackis.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -28,6 +30,18 @@ namespace ForumSnackis.Server.Controllers
             else
                 return NotFound();
 
+        }
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] CreateSubjectCommand csc)
+        {
+            var result = await service.CreateSubject(csc);
+            if (result == 0)
+                //Internal Server Error
+                return StatusCode(500);
+            else
+                //Created
+                return StatusCode(202);
         }
     }
 }

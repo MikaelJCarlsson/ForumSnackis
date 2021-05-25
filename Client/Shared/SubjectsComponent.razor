@@ -1,4 +1,21 @@
-﻿<h1>subjects</h1>
+﻿@if (Category != null)
+{
+    <h1>@Category.Title</h1>
+}
+<AuthorizeView>
+    <Authorized>
+        <button @onclick="() => SubjectForm = true">Create new Subject</button>
+    </Authorized>
+</AuthorizeView>
+@if (SubjectForm == true)
+{
+    <EditForm Model="NewSubject" OnSubmit="CreateSubject">
+        <InputText @bind-Value="NewSubject.Title" DisplayName="Subject Name"></InputText>
+        <InputText @bind-Value="NewSubject.FirstPost" DisplayName="Subject Name"></InputText>
+        <button type="submit">Submit</button>
+    </EditForm>
+
+}
 <table class="table">
     <thead>
     </thead>
@@ -7,20 +24,20 @@
         {
             @foreach (var s in Category.subjects)
             {
-        <tr>
-            <th scope="row">
-                <p>@s.Title</p>
-            </th>
-            <th scope="row">
-                <p>@s.TimeStamp.ToShortDateString()</p>
-            </th>
-            <th scope="row">
-                <p>@s.CreatedBy</p>
-            </th>
-            <th scope="row">
-                <p>@s.PostAmount</p>
-            </th>
-        </tr>
+                <tr>
+                    <th scope="row">
+                        <p>@s.Title</p>
+                    </th>
+                    <th scope="row">
+                        <p>@s.TimeStamp.ToShortDateString()</p>
+                    </th>
+                    <th scope="row">
+                        <p>@s.CreatedBy</p>
+                    </th>
+                    <th scope="row">
+                        <p>@s.PostAmount</p>
+                    </th>
+                </tr>
             }
         }
     </tbody>

@@ -8,6 +8,7 @@ namespace ForumSnackis.Shared.DTO
 {
     public class SubjectsDTO
     {
+        public int CategoryId { get; set; }
         public string Title { get; set; }
         public DateTime TimeStamp { get; set; }
         public string CreatedBy { get; set; }

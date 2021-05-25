@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using ForumSnackis.Shared.DTO;
+using ForumSnackis.Shared;
 
 namespace ForumSnackis.Server.Services
 {
@@ -44,6 +45,37 @@ namespace ForumSnackis.Server.Services
             {
                 return null;
             }
+        }
+
+        public async Task<int> CreateSubject(CreateSubjectCommand csc)
+        {
+            var category = await dbContext.ForumCategories
+                .Include(x => x.Subjects)
+                .Where(x => x.Id == csc.CategoryId)
+                .FirstOrDefaultAsync();
+
+            if(category != null)
+            {
+               category.Subjects = category.Subjects.ToList();
+                var subject = new Subject()
+                {
+                    SubjectTitle = csc.Title,
+                    ForumCategoryId = csc.CategoryId,
+                    Posts = new List<Post>(),                   
+                    
+                };
+                category.Subjects.Add(subject);
+                dbContext.SaveChanges();
+                var post = new Post()
+                {
+                    SubjectId = subject.Id,
+                    Content = csc.FirstPost
+                };
+                subject.Posts.Add(post);
+                
+                return await dbContext.SaveChangesAsync();
+            }
+            return 0;
         }
     }
 }
