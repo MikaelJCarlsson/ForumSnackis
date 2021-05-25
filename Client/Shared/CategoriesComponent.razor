@@ -1,0 +1,33 @@
+﻿
+<table class="table">
+    <thead>
+    </thead>
+    <tbody>
+        @if (categories is not null)
+        {
+            @foreach (var item in categories)
+            {
+                <tr @onclick="() => GetContent(item)">
+                    <th scope="row">
+                        <h1>@item.Title</h1>
+                    </th>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<div class="container">
+    @if (categories is not null)
+    {
+        @foreach (var item in categories)
+        {
+            <div class="row row-cols-4 bg-primary">
+                <div class="col">@item.Title</div>
+                <div class="col">Column</div>
+                <div class="col">Column</div>
+                <div class="col">Column</div>
+            </div>
+        }
+    }
+</div>

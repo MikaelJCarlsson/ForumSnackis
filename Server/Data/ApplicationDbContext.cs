@@ -17,5 +17,10 @@ namespace ForumSnackis.Server.Data
             IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
         }
+
+
+        public DbSet<ForumCategory> ForumCategories { get; set; }
+        public DbSet<Subject> Subjects { get; set; }
+        public DbSet<Post> Posts { get; set; }
     }
 }

@@ -1,0 +1,28 @@
+﻿<h1>subjects</h1>
+<table class="table">
+    <thead>
+    </thead>
+    <tbody>
+        @if (Category is not null && Category.subjects is not null)
+        {
+            @foreach (var s in Category.subjects)
+            {
+        <tr>
+            <th scope="row">
+                <p>@s.Title</p>
+            </th>
+            <th scope="row">
+                <p>@s.TimeStamp.ToShortDateString()</p>
+            </th>
+            <th scope="row">
+                <p>@s.CreatedBy</p>
+            </th>
+            <th scope="row">
+                <p>@s.PostAmount</p>
+            </th>
+        </tr>
+            }
+        }
+    </tbody>
+</table>
+
