@@ -1,11 +1,19 @@
 ﻿@using System.Net.Http
+
 @page "/"
 <h1>Hello, world!</h1>
 <button @onclick="NavigateHome">Home</button>
-
+<button @onclick="() => CategoryForm = true">Create new Category</button>
+@if(CategoryForm == true)
+{
+ <EditForm Model="NewCategory" OnSubmit="CreateCategory">
+     <InputText @bind-Value="NewCategory.Title" DisplayName="CategoryName"></InputText>
+     <button type="submit">Submit</button>
+ </EditForm>
+}
 @if (PageState == 1)
 {
-    <CategoriesComponent CategoryChanged="UpdateCategoryState"></CategoriesComponent>
+    <CategoriesComponent @ref="cat" CategoryChanged="UpdateCategoryState"></CategoriesComponent>
 }
 else if (PageState == 2)
 {
