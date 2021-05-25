@@ -60,7 +60,7 @@ namespace ForumSnackis.Server.Controllers
 
         // POST api/<CategoryController>
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles ="Administrators")]
         public async Task<IActionResult> Post([FromBody] string value)
         {
           var result = await service.CreateAsync(value);
