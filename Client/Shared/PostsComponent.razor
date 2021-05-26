@@ -1,8 +1,8 @@
 ﻿<h3>PostsComponent</h3>
 
-@if (CurrentSubject is not null && CurrentSubject.Posts is not null)
+@if (Posts is not null)
 {
-    @foreach (var post in CurrentSubject.Posts)
+    @foreach (var post in Posts)
     {
 <tr>
     <th scope="row">

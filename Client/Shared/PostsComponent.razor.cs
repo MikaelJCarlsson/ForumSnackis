@@ -13,6 +13,7 @@ namespace ForumSnackis.Client.Shared
     {
         [Parameter]
         public SubjectsDTO CurrentSubject { get; set; }
+        public List<PostDTO> Posts { get; set; }
         [Inject]
         public IHttpClientFactory HttpFactory { get; set; }
         protected override async Task OnParametersSetAsync()
@@ -24,7 +25,7 @@ namespace ForumSnackis.Client.Shared
 
                 if (request.IsSuccessStatusCode)
                 {
-                    CurrentSubject = await request.Content.ReadFromJsonAsync<SubjectsDTO>();
+                    Posts = await request.Content.ReadFromJsonAsync<List<PostDTO>>();
                 }
             }
         }

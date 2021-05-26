@@ -52,22 +52,22 @@ namespace ForumSnackis.Server.Services
         {
             try
             {
-                var subject = await dbContext.Subjects.Where(x => x.Id == id).Include(x => x.Posts).FirstOrDefaultAsync();
+                var subject = await dbContext.Subjects.Where(x => x.Id == id).Include(x => x.Posts).ThenInclude(x => x.PostedBy).FirstOrDefaultAsync();
 
                 List<PostDTO> posts = new();
                 if (subject is not null)
                 {
-                    foreach (Post post in subject.Posts)
+                    foreach (Post post in subject.Posts.ToList())
                     {
                         posts.Add(
-                            new PostDTO
+                            new PostDTO()
                             {
                                 Id = post.Id,
                                 Content = post.Content,
                                 PostDate = post.PostDate,
-                                PostedBy = post.PostedBy.UserName,
+                                PostedBy = post.PostedBy?.UserName,
                                 SubjectId = post.SubjectId,
-                                Quote = post.Quote.Content,
+                                Quote = post.Quote?.Content,
                             });
                     }
                     return posts;

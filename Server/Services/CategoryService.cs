@@ -84,6 +84,7 @@ namespace ForumSnackis.Server.Services
                     .ForEach(x =>
                     result.subjects.Add(new SubjectsDTO()
                     {
+                        Id = x.Id,
                         Title = x.SubjectTitle,
                         CreatedBy = x.CreatedBy.UserName,
                         PostAmount = x.Posts.Count(),
