@@ -17,6 +17,8 @@ namespace ForumSnackis.Client.Pages
         public int PageState { get; set; } = 1;
         [Parameter]
         public CategoryDTO Category { get; set; }
+        [Parameter]
+        public SubjectsDTO CurrentSubject { get; set; }
         [Inject]
         public IHttpClientFactory HttpFactory { get; set; }
 
