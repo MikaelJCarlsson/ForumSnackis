@@ -14,6 +14,8 @@ namespace ForumSnackis.Client.Shared
         [Parameter]
         public SubjectsDTO CurrentSubject { get; set; }
         public List<PostDTO> Posts { get; set; }
+
+        public PostDTO NewPost { get; set; } = new();
         [Inject]
         public IHttpClientFactory HttpFactory { get; set; }
         protected override async Task OnParametersSetAsync()
@@ -28,6 +30,24 @@ namespace ForumSnackis.Client.Shared
                     Posts = await request.Content.ReadFromJsonAsync<List<PostDTO>>();
                 }
             }
+        }
+        private async Task CreatePost()
+        {
+            if (NewPost is not null && CurrentSubject is not null)
+            {
+                NewPost.SubjectId = CurrentSubject.Id;
+                var privateHttp = HttpFactory.CreateClient("private");
+                var request = await privateHttp.PostAsJsonAsync($"api/Subject/Posts/",NewPost);
+
+                if (request.IsSuccessStatusCode)
+                {
+                    NewPost.Content = "";
+                    var publicHttp = HttpFactory.CreateClient("public");
+                    var getRequest = await publicHttp.GetAsync($"api/Subject/Posts/{CurrentSubject.Id}");
+                    Posts = await getRequest.Content.ReadFromJsonAsync<List<PostDTO>>();
+                }
+            }
+           
         }
     }
 }

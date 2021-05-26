@@ -1,5 +1,6 @@
 ﻿using ForumSnackis.Server.Services;
 using ForumSnackis.Shared;
+using ForumSnackis.Shared.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -50,6 +51,19 @@ namespace ForumSnackis.Server.Controllers
         public async Task<IActionResult> Post([FromBody] CreateSubjectCommand csc)
         {       
             var result = await service.CreateSubject(csc, User);
+            if (result == 0)
+                //Internal Server Error
+                return StatusCode(500);
+            else
+                //Created
+                return StatusCode(202);
+        }
+
+        [Authorize]
+        [HttpPost("Posts/")]
+        public async Task<IActionResult> Post([FromBody] PostDTO post)
+        {
+            var result = await service.CreatePost(post,User);
             if (result == 0)
                 //Internal Server Error
                 return StatusCode(500);

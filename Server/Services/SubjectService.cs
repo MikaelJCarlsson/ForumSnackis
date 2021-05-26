@@ -28,13 +28,13 @@ namespace ForumSnackis.Server.Services
                 var result = await dbContext.Subjects.Include(x => x.Posts)
                     .Include(x => x.CreatedBy)
                     .Where(x => x.Id == id)
-                    .Select(x => new SubjectsDTO 
+                    .Select(x => new SubjectsDTO
                     {
-                        Title = x.SubjectTitle, 
-                        TimeStamp = x.SubjectDate, 
-                        CreatedBy = x.CreatedBy.NormalizedUserName, 
-                        PostAmount = x.Posts.Count() 
-                    })                    
+                        Title = x.SubjectTitle,
+                        TimeStamp = x.SubjectDate,
+                        CreatedBy = x.CreatedBy.NormalizedUserName,
+                        PostAmount = x.Posts.Count()
+                    })
                     .FirstOrDefaultAsync();
 
                 if (result is default(SubjectsDTO))
@@ -73,10 +73,29 @@ namespace ForumSnackis.Server.Services
                     return posts;
                 }
                 return null;
-            } catch(Exception)
+            } catch (Exception)
             {
                 return null;
             }
+        }
+
+        internal async Task<int> CreatePost (PostDTO post, ClaimsPrincipal claims)
+        {
+            var subject = await dbContext.Subjects.Include(x => x.Posts).Where(x => x.Id == post.SubjectId).FirstOrDefaultAsync();
+            var user = await FetchUserId(claims.Claims.First().Value);
+            if(subject != null)
+            {
+                var newPost = new Post()
+                {
+                    SubjectId = subject.Id,
+                    Content = post.Content,
+                    PostedBy = user,
+                    PostDate = DateTime.Now
+                };
+                subject.Posts.Add(newPost);
+                return await dbContext.SaveChangesAsync();
+            }
+            return 0;
         }
 
         public async Task<ApplicationUser> FetchUserId(string userId)

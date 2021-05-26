@@ -1,19 +1,36 @@
-﻿<h3>PostsComponent</h3>
+﻿@if (CurrentSubject != null)
+{
+    <h3>@CurrentSubject.Title</h3>
+}
 
 @if (Posts is not null)
 {
     @foreach (var post in Posts)
     {
-<tr>
-    <th scope="row">
-        <p>@post.Content</p>
-    </th>
-    <th scope="row">
-        <p>@post.PostedBy</p>
-    </th>
-    <th scope="row">
-        <p>@post.PostDate</p>
-    </th>
-</tr>
+        <table>
+            <tr>
+                <th scope="row">
+                    <p>@post.Content</p>
+                </th>
+                <th scope="row">
+                    <p>@post.PostedBy</p>
+                </th>
+                <th scope="row">
+                    <p>@post.PostDate</p>
+                </th>
+            </tr>
+        </table>
     }
+<AuthorizeView Context="AuthContext">
+    <Authorized>
+        <EditForm Model="NewPost" OnSubmit="CreatePost">
+            <InputText @bind-Value="NewPost.Content" DisplayName="Message Here"></InputText>
+            <button type="submit">Submit</button>
+        </EditForm>
+    </Authorized>
+
+</AuthorizeView>
+
+
+
 }
