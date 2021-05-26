@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using ForumSnackis.Shared.DTO;
 using ForumSnackis.Shared;
+using System.Security.Claims;
 
 namespace ForumSnackis.Server.Services
 {
@@ -46,13 +47,18 @@ namespace ForumSnackis.Server.Services
                 return null;
             }
         }
-
-        public async Task<int> CreateSubject(CreateSubjectCommand csc)
+        public async Task<ApplicationUser> FetchUserId(string userId)
+        {
+            return await dbContext.Users.Where(x => x.Id.Contains(userId)).FirstOrDefaultAsync();
+        }
+        public async Task<int> CreateSubject(CreateSubjectCommand csc, ClaimsPrincipal claims)
         {
             var category = await dbContext.ForumCategories
                 .Include(x => x.Subjects)
                 .Where(x => x.Id == csc.CategoryId)
                 .FirstOrDefaultAsync();
+
+            var user = await FetchUserId(claims.Claims.First().Value);
 
             if(category != null)
             {
@@ -61,15 +67,20 @@ namespace ForumSnackis.Server.Services
                 {
                     SubjectTitle = csc.Title,
                     ForumCategoryId = csc.CategoryId,
-                    Posts = new List<Post>(),                   
+                    Posts = new List<Post>(),
+                    CreatedBy = user,
+                    SubjectDate = DateTime.Now
                     
                 };
                 category.Subjects.Add(subject);
                 dbContext.SaveChanges();
+
                 var post = new Post()
                 {
                     SubjectId = subject.Id,
-                    Content = csc.FirstPost
+                    Content = csc.FirstPost,
+                    PostedBy = user,
+                    PostDate = DateTime.Now
                 };
                 subject.Posts.Add(post);
                 

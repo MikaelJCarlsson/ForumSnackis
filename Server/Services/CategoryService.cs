@@ -85,7 +85,7 @@ namespace ForumSnackis.Server.Services
                     result.subjects.Add(new SubjectsDTO()
                     {
                         Title = x.SubjectTitle,
-                        CreatedBy = "Micke",//x.CreatedBy.UserName,
+                        CreatedBy = x.CreatedBy.UserName,
                         PostAmount = x.Posts.Count(),
                         TimeStamp = x.SubjectDate
                     }));
