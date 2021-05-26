@@ -1,5 +1,19 @@
 ﻿<h3>PostsComponent</h3>
 
-@code {
-
+@if (CurrentSubject is not null && CurrentSubject.Posts is not null)
+{
+    @foreach (var post in CurrentSubject.Posts)
+    {
+<tr>
+    <th scope="row">
+        <p>@post.Content</p>
+    </th>
+    <th scope="row">
+        <p>@post.PostedBy</p>
+    </th>
+    <th scope="row">
+        <p>@post.PostDate</p>
+    </th>
+</tr>
+    }
 }

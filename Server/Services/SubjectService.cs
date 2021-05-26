@@ -47,6 +47,38 @@ namespace ForumSnackis.Server.Services
                 return null;
             }
         }
+
+        internal async Task<List<PostDTO>> GetPosts(int id)
+        {
+            try
+            {
+                var subject = await dbContext.Subjects.Where(x => x.Id == id).Include(x => x.Posts).FirstOrDefaultAsync();
+
+                List<PostDTO> posts = new();
+                if (subject is not null)
+                {
+                    foreach (Post post in subject.Posts)
+                    {
+                        posts.Add(
+                            new PostDTO
+                            {
+                                Id = post.Id,
+                                Content = post.Content,
+                                PostDate = post.PostDate,
+                                PostedBy = post.PostedBy.UserName,
+                                SubjectId = post.SubjectId,
+                                Quote = post.Quote.Content,
+                            });
+                    }
+                    return posts;
+                }
+                return null;
+            } catch(Exception)
+            {
+                return null;
+            }
+        }
+
         public async Task<ApplicationUser> FetchUserId(string userId)
         {
             return await dbContext.Users.Where(x => x.Id.Contains(userId)).FirstOrDefaultAsync();

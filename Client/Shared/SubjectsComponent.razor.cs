@@ -12,12 +12,16 @@ namespace ForumSnackis.Client.Shared
     public partial class SubjectsComponent : ComponentBase
     {
         [Parameter]
-        public CategoryDTO Category { get; set; }       
+        public CategoryDTO Category { get; set; }
+        [Parameter]
+        public EventCallback<SubjectsDTO> SubjectPosts { get; set; }
         [Inject]
         public IHttpClientFactory HttpFactory { get; set; }
         public int SubjectsDTO { get; private set; }
         public bool SubjectForm { get; set; }
         public CreateSubjectCommand NewSubject { get; set; } = new();
+
+
         protected override async Task OnParametersSetAsync()
         {
             if (Category is not null)
@@ -30,6 +34,12 @@ namespace ForumSnackis.Client.Shared
                     Category = await request.Content.ReadFromJsonAsync<CategoryDTO>();
                 }
             }
+        }
+
+        public async void OpenSubject(SubjectsDTO subject)
+        {
+            await SubjectPosts.InvokeAsync(subject);
+
         }
         public async void CreateSubject()
         {

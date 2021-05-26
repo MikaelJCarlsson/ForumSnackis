@@ -32,6 +32,11 @@ namespace ForumSnackis.Client.Pages
             PageState = 2;
         }
 
+        private void OpenSubjectPosts(SubjectsDTO subject)
+        {
+            CurrentSubject = subject;
+            PageState = 3;
+        }
         private void NavigateHome()
         {
             PageState = 1;

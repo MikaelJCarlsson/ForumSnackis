@@ -32,6 +32,19 @@ namespace ForumSnackis.Server.Controllers
                 return NotFound();
 
         }
+
+        [HttpGet("Posts/{id}")]
+        public async Task<IActionResult> GetPosts(int id)
+        {
+
+            var subject = await service.GetPosts(id);
+            if (subject is not null)
+                return Ok(subject);
+            else
+                return NotFound();
+
+        }
+
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] CreateSubjectCommand csc)

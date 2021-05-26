@@ -23,7 +23,7 @@
         {
             @foreach (var s in Category.subjects)
             {
-                <tr>
+                <tr @onclick="() => OpenSubject(s)">
                     <th scope="row">
                         <p>@s.Title</p>
                     </th>
