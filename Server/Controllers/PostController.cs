@@ -19,7 +19,15 @@ namespace ForumSnackis.Server.Controllers
         {
             this.service = service;
         }
-
+        [Authorize(Roles = "Administrators")]
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            var posts = await service.GetAsync();
+            if (posts is not null)
+                return Ok(posts);
+            else return NotFound();
+        }
         [Authorize]
         [HttpPost("Report/")]
         public async Task<IActionResult> Post([FromBody] int id)
