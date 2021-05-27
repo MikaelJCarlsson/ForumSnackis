@@ -3,24 +3,18 @@
     <h3>@CurrentSubject.Title</h3>
 }
 
-@if (Posts is not null)
-{
-    @foreach (var post in Posts)
+
+
+<div class="container">
+    @if (Posts is not null)
     {
-        <table>
-            <tr>
-                <th scope="row">
-                    <p>@post.Content</p>
-                </th>
-                <th scope="row">
-                    <p>@post.PostedBy</p>
-                </th>
-                <th scope="row">
-                    <p>@post.PostDate</p>
-                </th>
-            </tr>
-        </table>
+
+        @foreach (var post in Posts)
+        {
+            <PostCardComponent Post="post"></PostCardComponent>
+        }
     }
+</div>
 <AuthorizeView Context="AuthContext">
     <Authorized>
         <EditForm Model="NewPost" OnSubmit="CreatePost">
@@ -28,9 +22,8 @@
             <button type="submit">Submit</button>
         </EditForm>
     </Authorized>
-
 </AuthorizeView>
 
 
 
-}
+
