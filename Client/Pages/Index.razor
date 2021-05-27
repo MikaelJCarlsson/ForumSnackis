@@ -5,9 +5,11 @@
 <button @onclick="NavigateHome">Home</button>
 <AuthorizeView Roles="Administrators">
     <Authorized>
+        <ReportedPostComponent></ReportedPostComponent>
         <button @onclick="() => CategoryForm = true">Create new Category</button>
     </Authorized>
 </AuthorizeView>
+
 
 @if(CategoryForm == true)
 {

@@ -1,5 +1,6 @@
 ﻿using ForumSnackis.Server.Data;
 using ForumSnackis.Server.Models;
+using ForumSnackis.Shared.DTO;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -44,6 +45,38 @@ namespace ForumSnackis.Server.Services
             } catch(Exception)
             {
                 return 0;
+            }
+        }
+
+        internal async Task<List<PostDTO>> GetAsync()
+        {
+            try
+            {
+                var post = await dbContext.Reports.Include(x => x.Post).ThenInclude(x => x.PostedBy).ToListAsync();
+
+                List<PostDTO> posts = new();
+                if (post is not null)
+                {
+                    foreach (var p in post)
+                    {
+                        posts.Add(
+                            new PostDTO()
+                            {
+                                
+                                Id = p.Post.Id,
+                                Content = p.Post.Content,
+                                PostDate = p.Post.PostDate,
+                                PostedBy = p.Post.PostedBy.UserName,
+                                SubjectId = p.Post.SubjectId,
+                            });
+                    }
+                    return posts;
+                }
+                return null;
+            }
+            catch (Exception)
+            {
+                return null;
             }
         }
     }
