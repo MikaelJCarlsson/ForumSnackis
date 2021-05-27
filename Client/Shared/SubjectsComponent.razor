@@ -15,7 +15,7 @@
         <button type="submit">Submit</button>
     </EditForm>
 }
-<table class="table">
+@*<table class="table">
     <thead>
     </thead>
     <tbody>
@@ -31,7 +31,7 @@
                         <p>@s.TimeStamp.ToShortDateString()</p>
                     </th>
                     <th scope="row">
-                        <p>@s.CreatedBy</p>
+                        <p></p>
                     </th>
                     <th scope="row">
                         <p>@s.PostAmount</p>
@@ -40,5 +40,22 @@
             }
         }
     </tbody>
-</table>
+</table>*@
+
+<div class="list-group">
+    @if (Category is not null && Category.subjects is not null)
+    {
+        @foreach (var sub in Category.subjects)
+        {
+            <a @onclick="() => OpenSubject(sub)" class="list-group-item list-group-item-action bg-light" aria-current="false">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">@sub.Title</h5>
+                    <small>Last post @sub.TimeStamp.ToShortDateString()</small>
+                    <small>Posts @sub.PostAmount</small>
+                </div>
+                <small>Created by @sub.CreatedBy.</small>
+            </a>
+        }
+    }
+</div>
 
