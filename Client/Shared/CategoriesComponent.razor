@@ -1,5 +1,5 @@
 ﻿
-<table class="table">
+@*<table class="table">
     <thead>
     </thead>
     <tbody>
@@ -15,19 +15,20 @@
             }
         }
     </tbody>
-</table>
-
-<div class="container">
+</table>*@
+<div class="list-group">
     @if (categories is not null)
     {
-        @foreach (var item in categories)
+        @foreach (var cat in categories)
         {
-            <div class="row row-cols-4 bg-primary">
-                <div class="col">@item.Title</div>
-                <div class="col">Column</div>
-                <div class="col">Column</div>
-                <div class="col">Column</div>
-            </div>
+            <a @onclick="() => GetContent(cat)" class="list-group-item list-group-item-action bg-light" aria-current="false">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">@cat.Title</h5>
+                    <small>Last post 3 days ago</small>
+                </div>
+                <p class="mb-1">Some placeholder content in a paragraph.</p>
+                <small>And some small print.</small>
+            </a>
         }
     }
 </div>
