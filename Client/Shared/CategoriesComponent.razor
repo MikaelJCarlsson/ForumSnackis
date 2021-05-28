@@ -2,11 +2,15 @@
     @if (categories is not null)
     {
         @foreach (var cat in categories)
-        {
-            <div class="btn-group btn-group-sm col col-1">
-                <button class="btn btn-primary oi oi-cog" @onclick="() => EditCategoryTitle(cat.Id)"></button>
-                <button class="btn btn-danger oi oi-circle-x" @onclick="() => DeleteCategory(cat)"></button>
-            </div>
+        {<AuthorizeView Roles="Administrators">
+             <Authorized>
+                 <div class="btn-group btn-group-sm col col-1">
+                     <button class="btn btn-primary oi oi-cog" @onclick="() => EditCategoryTitle(cat.Id)"></button>
+                     <button class="btn btn-danger oi oi-circle-x" @onclick="() => DeleteCategory(cat)"></button>
+                 </div>
+             </Authorized>
+        </AuthorizeView>
+
 
             <a @onclick="() => GetContent(cat)" class="list-group-item list-group-item-action bg-light" aria-current="false">
                 <div class="d-flex w-100 justify-content-between">
@@ -16,15 +20,19 @@
                 <p class="mb-1">Some placeholder content in a paragraph.</p>
                 <small>And some small print.</small>
             </a>
-            @if (ShowInputField && cat.Id == ShowInputFieldForId)
-            {
-                    <EditForm Model="NewCategoryTitle" OnSubmit="()=> EditCategory(cat)">
-                    <h5 class="mb-1">
-                        <InputText @bind-Value="@NewCategoryTitle"></InputText>
-                    </h5>
-                    <button type="submit">Submit</button>
-                    </EditForm>
-             }
+            <AuthorizeView Roles="Administrators">
+                <Authorized>
+                    @if (ShowInputField && cat.Id == ShowInputFieldForId)
+                    {
+                        <EditForm Model="NewCategoryTitle" OnSubmit="()=> EditCategory(cat)">
+                            <h5 class="mb-1">
+                                <InputText @bind-Value="@NewCategoryTitle"></InputText>
+                            </h5>
+                            <button type="submit">Submit</button>
+                        </EditForm>
+                    }
+                </Authorized>
+            </AuthorizeView>
         }
     }
 </div>
