@@ -2,7 +2,8 @@
     @if (categories is not null)
     {
         @foreach (var cat in categories)
-        {<AuthorizeView Roles="Administrators">
+        {
+            <AuthorizeView Roles="Administrators">
                 <Authorized>
                     <div class="btn-group btn-group-sm col col-1">
                         <button class="btn btn-primary oi oi-cog" @onclick="() => EditCategoryTitle(cat.Id)"></button>

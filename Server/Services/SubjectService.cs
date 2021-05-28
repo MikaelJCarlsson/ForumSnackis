@@ -79,6 +79,30 @@ namespace ForumSnackis.Server.Services
             }
         }
 
+        internal async Task<int> UpdateAsync(int id, SubjectsDTO subjDto)
+        {
+            var subj = await dbContext.Subjects.FindAsync(id);
+            if(subj is not null)
+            {
+                subj.SubjectTitle = subjDto.Title;
+                dbContext.Update(subj);
+                return await dbContext.SaveChangesAsync();
+            }
+            return 0;
+         }
+
+        internal async Task<int> DeleteAsync(int id)
+        {
+            var subj = await dbContext.Subjects.FindAsync(id);
+
+            if(subj is not null)
+            {
+                dbContext.Remove(subj);
+                return await dbContext.SaveChangesAsync();
+            }
+            return 0;
+        }
+
         internal async Task<int> CreatePost (PostDTO post, ClaimsPrincipal claims)
         {
             var subject = await dbContext.Subjects.Include(x => x.Posts).Where(x => x.Id == post.SubjectId).FirstOrDefaultAsync();

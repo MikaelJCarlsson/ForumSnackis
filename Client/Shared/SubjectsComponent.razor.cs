@@ -21,6 +21,9 @@ namespace ForumSnackis.Client.Shared
         public bool SubjectForm { get; set; }
         public CreateSubjectCommand NewSubject { get; set; } = new();
 
+        private bool ShowInputField;
+        private int ShowInputFieldForId;
+        public string NewSubjectTitle = "";
 
         protected override async Task OnParametersSetAsync()
         {
@@ -61,6 +64,44 @@ namespace ForumSnackis.Client.Shared
                         StateHasChanged();
                     }
                 }
+            }
+        }
+
+        private void ToggleSubjectEditForm(int id)
+        {
+            if (ShowInputField == true)
+            {
+                ShowInputFieldForId = 0;
+                ShowInputField = false;
+            }
+            else
+            {
+                ShowInputFieldForId = id;
+                ShowInputField = true;
+            }
+        }
+
+        public async Task DeleteSubject(SubjectsDTO subj)
+        {
+            var privateHttp = HttpFactory.CreateClient("private");
+            var result = await privateHttp.DeleteAsync($"api/Subject/{subj.Id}");
+            if (result.IsSuccessStatusCode)
+            {
+                ToggleSubjectEditForm(0);
+                await OnParametersSetAsync();
+            }
+        }
+
+        public async Task SubmitEditSubjectTitle(SubjectsDTO subj)
+        {
+            subj.Title = NewSubjectTitle;
+            var privateHttp = HttpFactory.CreateClient("private");
+            var result = await privateHttp.PutAsJsonAsync($"api/Subject/{subj.Id}", subj);
+            if (result.IsSuccessStatusCode)
+            {
+                NewSubjectTitle = "";
+                ToggleSubjectEditForm(0);
+                await OnParametersSetAsync();
             }
         }
     }

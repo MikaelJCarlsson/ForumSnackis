@@ -71,5 +71,27 @@ namespace ForumSnackis.Server.Controllers
                 //Created
                 return StatusCode(202);
         }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Administrators")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var category = await service.DeleteAsync(id);
+            if (category != 0)
+                return Ok();
+            else
+                return NotFound();
+        }
+
+        [HttpPut("{id}")]
+        [Authorize(Roles = "Administrators")]
+        public async Task<IActionResult> Put(int id, [FromBody] SubjectsDTO subj)
+        {
+            var result = await service.UpdateAsync(id,subj);
+            if (result != 0)
+                return Ok();
+            else
+                return StatusCode(409);
+        }
     }
 }

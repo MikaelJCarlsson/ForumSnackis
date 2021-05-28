@@ -16,11 +16,21 @@
     </EditForm>
 }
 
+
 <div class="list-group">
     @if (Category is not null && Category.subjects is not null)
     {
         @foreach (var sub in Category.subjects)
         {
+            <AuthorizeView Roles="Administrators">
+                <Authorized>
+                    <div class="btn-group btn-group-sm col col-1">
+                        <button class="btn btn-primary oi oi-cog" @onclick="() => ToggleSubjectEditForm(sub.Id)"></button>
+                        <button class="btn btn-danger oi oi-circle-x" @onclick="() => DeleteSubject(sub)"></button>
+                    </div>
+                </Authorized>
+            </AuthorizeView>
+
             <a @onclick="() => OpenSubject(sub)" class="list-group-item list-group-item-action bg-light" aria-current="false">
                 <div class="d-flex w-100 justify-content-between">
                     <h5 class="mb-1">@sub.Title</h5>
@@ -29,6 +39,16 @@
                 </div>
                 <small>Created by @sub.CreatedBy.</small>
             </a>
+
+            @if (ShowInputField && sub.Id == ShowInputFieldForId)
+            {
+                <EditForm Model="NewSubjectTitle" OnSubmit="()=> SubmitEditSubjectTitle(sub)">
+                    <h5 class="mb-1">
+                        <InputText @bind-Value="@NewSubjectTitle"></InputText>
+                    </h5>
+                    <button type="submit">Submit</button>
+                </EditForm>
+            }
         }
     }
 </div>
