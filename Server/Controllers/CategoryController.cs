@@ -74,7 +74,7 @@ namespace ForumSnackis.Server.Controllers
 
         // PUT api/<CategoryController>/5
         [HttpPut("{id}")]
-        [Authorize]
+        [Authorize(Roles = "Administrators")]
         public async Task<IActionResult> Put(int id, [FromBody] string value)
         {
             var result = await service.UpdateAsync(id, value);
@@ -86,7 +86,7 @@ namespace ForumSnackis.Server.Controllers
 
         // DELETE api/<CategoryController>/5
         [HttpDelete("{id}")]
-        [Authorize]
+        [Authorize(Roles = "Administrators")]
         public async Task<IActionResult> Delete(int id)
         {
             var category = await service.DeleteAsync(id);

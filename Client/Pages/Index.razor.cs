@@ -49,6 +49,7 @@ namespace ForumSnackis.Client.Pages
                 CategoryDTO category = new();
                 category.Title = NewCategory.Title;
                 CategoriesRef.CreateCategory(category.Title);
+
             }          
         }
     }

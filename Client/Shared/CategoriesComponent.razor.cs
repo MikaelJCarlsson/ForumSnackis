@@ -16,7 +16,9 @@ namespace ForumSnackis.Client.Shared
         public int CurrentPageState { get; set; } 
 
         private List<CategoryDTO> categories;
-
+        public string NewCategoryTitle { get; set; } = "";
+        public bool ShowInputField { get; set; }
+        public int ShowInputFieldForId { get; set; }
         [Parameter]
         public EventCallback<CategoryDTO> CategoryChanged { get; set; }
         [Inject]
@@ -44,6 +46,7 @@ namespace ForumSnackis.Client.Shared
             await CategoryChanged.InvokeAsync(category);
            
         }
+
         public async void CreateCategory(string title)
         {
 
@@ -57,6 +60,54 @@ namespace ForumSnackis.Client.Shared
                 StateHasChanged();
             }
 
+        }
+        public void EditCategoryTitle(int id)
+        {
+            if (ShowInputField == true)
+            {
+                ShowInputFieldForId = 0;
+                ShowInputField = false;
+            }
+            else
+            {
+                ShowInputFieldForId = id;
+                ShowInputField = true;
+            }            
+        }
+        public void CloseEditTitle()
+        {
+            ShowInputFieldForId = 0;
+            ShowInputField = false;
+        }
+        public async Task EditCategory(CategoryDTO category)
+        {
+            CloseEditTitle();
+            var title = NewCategoryTitle;
+            var privateHttp = HttpFactory.CreateClient("private");
+            var result = await privateHttp.PutAsJsonAsync($"api/Category/{category.Id}", title);
+            if (result.IsSuccessStatusCode)
+            {
+                var publicHttp = HttpFactory.CreateClient("public");
+                var request = await publicHttp.GetAsync("api/Category");
+                categories = await request.Content.ReadFromJsonAsync<List<CategoryDTO>>();
+                NewCategoryTitle = "";
+                       
+            }            
+            StateHasChanged();
+        }
+        public async Task DeleteCategory(CategoryDTO category)
+        {
+            var privateHttp = HttpFactory.CreateClient("private");
+            var result = await privateHttp.DeleteAsync($"api/Category/{category.Id}");
+            if (result.IsSuccessStatusCode)
+            {
+                var publicHttp = HttpFactory.CreateClient("public");
+                var request = await publicHttp.GetAsync("api/Category");
+                categories = await request.Content.ReadFromJsonAsync<List<CategoryDTO>>();
+                NewCategoryTitle = "";
+
+            }
+            StateHasChanged();
         }
     }
 }
