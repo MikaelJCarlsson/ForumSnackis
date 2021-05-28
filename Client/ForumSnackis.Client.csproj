@@ -1,7 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>6144db64-994c-4c79-b6e0-9407f38abd6a</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
