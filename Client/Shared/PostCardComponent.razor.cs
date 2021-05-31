@@ -54,6 +54,19 @@ namespace ForumSnackis.Client.Shared
                 ShowReplyForm = false;
             }
         }
+        private async Task DeletePost()
+        {
+            if(Post is not null)
+            {
+                var privateHttp = HttpFactory.CreateClient("private");
+                var result = await privateHttp.DeleteAsync($"api/Post/{Post.Id}");
+
+                if(result.IsSuccessStatusCode)
+                {
+                    await UpdatePosts.InvokeAsync();
+                }
+            }
+        }
         private async Task CreateReply()
         {
             if (Reply is not null)

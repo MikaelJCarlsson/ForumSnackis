@@ -79,8 +79,13 @@ namespace ForumSnackis.Server.Services
             try
             {
                 var post = await dbContext.Posts.FindAsync(id);
-                dbContext.Remove(post);
-                return await dbContext.SaveChangesAsync();
+                if(post is not null)
+                {
+                    await dbContext.Posts.Where(p => p.Quote == post).ForEachAsync(p => p.Quote = null);
+                    dbContext.Remove(post);
+                    return await dbContext.SaveChangesAsync();
+                }
+                return 0;
             }
             catch (Exception)
             {
