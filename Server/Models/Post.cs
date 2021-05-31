@@ -12,5 +12,6 @@ namespace ForumSnackis.Server.Models
         public Post Quote { get; set; }
         public int SubjectId { get; set; }
         public Subject Subject { get; set; }
+        public Report Report { get; set; }
     }
 }

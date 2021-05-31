@@ -8,5 +8,6 @@ namespace ForumSnackis.Server.Models
 {
     public class ApplicationUser : IdentityUser
     {
+        public Report Report { get; set; }
     }
 }

@@ -4,14 +4,16 @@ using ForumSnackis.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ForumSnackis.Server.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210528144042_v1")]
+    partial class v1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -144,20 +146,17 @@ namespace ForumSnackis.Server.Data.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int>("PostId")
+                    b.Property<int?>("PostId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ReportedByID")
+                    b.Property<string>("ReportedById")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PostId")
-                        .IsUnique();
+                    b.HasIndex("PostId");
 
-                    b.HasIndex("ReportedByID")
-                        .IsUnique()
-                        .HasFilter("[ReportedByID] IS NOT NULL");
+                    b.HasIndex("ReportedById");
 
                     b.ToTable("Reports");
                 });
@@ -461,14 +460,12 @@ namespace ForumSnackis.Server.Data.Migrations
             modelBuilder.Entity("ForumSnackis.Server.Models.Report", b =>
                 {
                     b.HasOne("ForumSnackis.Server.Models.Post", "Post")
-                        .WithOne("Report")
-                        .HasForeignKey("ForumSnackis.Server.Models.Report", "PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("PostId");
 
                     b.HasOne("ForumSnackis.Server.Models.ApplicationUser", "ReportedBy")
-                        .WithOne("Report")
-                        .HasForeignKey("ForumSnackis.Server.Models.Report", "ReportedByID");
+                        .WithMany()
+                        .HasForeignKey("ReportedById");
 
                     b.Navigation("Post");
 
@@ -543,21 +540,11 @@ namespace ForumSnackis.Server.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ForumSnackis.Server.Models.ApplicationUser", b =>
-                {
-                    b.Navigation("Report");
-                });
-
             modelBuilder.Entity("ForumSnackis.Server.Models.ForumCategory", b =>
                 {
                     b.Navigation("ForumSubCategories");
 
                     b.Navigation("Subjects");
-                });
-
-            modelBuilder.Entity("ForumSnackis.Server.Models.Post", b =>
-                {
-                    b.Navigation("Report");
                 });
 
             modelBuilder.Entity("ForumSnackis.Server.Models.Subject", b =>

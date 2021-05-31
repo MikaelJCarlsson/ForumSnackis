@@ -1,0 +1,6 @@
+﻿@page "/reports"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@attribute [Authorize(Roles ="Administrators")]
+<ReportedPostComponent></ReportedPostComponent>
+
