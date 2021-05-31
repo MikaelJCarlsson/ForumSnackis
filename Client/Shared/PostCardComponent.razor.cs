@@ -25,11 +25,11 @@ namespace ForumSnackis.Client.Shared
             this.StateHasChanged();
         }
 
-        private async Task ReportPost(int id)
+        private async Task ReportPost()
         {
             if(Post is not null) { 
                 var privateHttp = HttpFactory.CreateClient("private");
-                var result = await privateHttp.PostAsJsonAsync($"api/Post/Report/", id);
+                var result = await privateHttp.PostAsJsonAsync($"api/Post/Report/", Post.Id);
 
                 if (result.IsSuccessStatusCode)
                 { 

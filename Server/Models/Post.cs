@@ -8,6 +8,7 @@ namespace ForumSnackis.Server.Models
         public int Id { get; set; }
         public string Content { get; set; }
         public DateTime PostDate { get; set; }
+        public string PostedById { get; set; }
         public ApplicationUser PostedBy { get; set; }
         public Post Quote { get; set; }
         public int SubjectId { get; set; }

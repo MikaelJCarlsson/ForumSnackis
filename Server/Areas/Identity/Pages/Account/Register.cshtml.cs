@@ -83,6 +83,7 @@ namespace RoleEnabledWebAssembly.Server.Areas.Identity.Pages
                     await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
+                    user.RegistrationDate = DateTime.Now;
                     // Set confirm Email for user
                     user.EmailConfirmed = true;
                     await _userManager.UpdateAsync(user);

@@ -58,7 +58,7 @@ namespace ForumSnackis.Server.Services
                                                       .Include(x => x.Posts)
                                                       .ThenInclude(p => p.Quote)
                                                       .FirstOrDefaultAsync();
-
+                
                 List<PostDTO> posts = new();
                 if (subject is not null)
                 {
@@ -74,8 +74,10 @@ namespace ForumSnackis.Server.Services
                                 SubjectId = post.SubjectId,
                                 QuoteContent = post.Quote?.Content,
                                 QuoteId = post.Quote?.Id,
-                                QuotePostedBy = post.Quote?.PostedBy.UserName
-                            });
+                                QuotePostedBy = post.Quote?.PostedBy.UserName,
+                                PostCount = post.PostedBy.Posts.Count(),
+                                AccountCreated = post.PostedBy.RegistrationDate
+                            }) ;
                     }
                     return posts;
                 }

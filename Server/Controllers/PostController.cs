@@ -48,12 +48,13 @@ namespace ForumSnackis.Server.Controllers
             
             int result = await service.Report(id, User);
 
-            if(result == 0)
-            {
-                return StatusCode(500);
-            } else
+            if(result != 0)
             {
                 return Ok();
+            }
+            else
+            {
+                return StatusCode(500);
             }
         }
         [HttpPut("{id}")]
