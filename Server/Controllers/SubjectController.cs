@@ -84,7 +84,7 @@ namespace ForumSnackis.Server.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Administrators")]
+        [Authorize]
         public async Task<IActionResult> Put(int id, [FromBody] SubjectsDTO subj)
         {
             var result = await service.UpdateAsync(id,subj);

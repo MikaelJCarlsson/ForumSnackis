@@ -1,4 +1,5 @@
 ﻿using ForumSnackis.Server.Services;
+using ForumSnackis.Shared.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -23,10 +24,22 @@ namespace ForumSnackis.Server.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var posts = await service.GetAsync();
+            var posts = await service.GetReportsAsync();
             if (posts is not null)
                 return Ok(posts);
             else return NotFound();
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int id)
+        {
+
+            var post = await service.GetAsync(id);
+            if (post is not null)
+                return Ok(post);
+            else
+                return NotFound();
+
         }
         [Authorize]
         [HttpPost("Report/")]
@@ -43,7 +56,25 @@ namespace ForumSnackis.Server.Controllers
                 return Ok();
             }
         }
-
-
+        [HttpPut("{id}")]
+        [Authorize]
+        public async Task<IActionResult> Put(int id, [FromBody] PostDTO post)
+        {
+            var result = await service.UpdateAsync(id, post,User);
+            if (result != 0)
+                return Ok();
+            else
+                return StatusCode(409);
+        }
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Administrators")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var post = await service.DeleteAsync(id);
+            if (post != 0)
+                return Ok();
+            else
+                return NotFound();
+        }
     }
 }
