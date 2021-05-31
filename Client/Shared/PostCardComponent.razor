@@ -12,12 +12,12 @@
                                 @Post.PostedBy
                             </a>
                             <div class="text-muted small">
-                                @Post.PostDate.ToShortDateString();
+                                @Post.PostDate.ToShortDateString()
                             </div>
                         </div>
                         <div class="text-muted small ml-3">
-                            <div>Member since <strong>01/1/2019</strong></div>
-                            <div><strong>134</strong> posts</div>
+                            <div>Member since <strong>@Post.AccountCreated.ToShortDateString()</strong></div>
+                            <div><strong>@Post.PostCount</strong> posts</div>
                         </div>
                     </div>
                 </div>

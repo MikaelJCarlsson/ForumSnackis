@@ -4,14 +4,16 @@ using ForumSnackis.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ForumSnackis.Server.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210531192717_userposts")]
+    partial class userposts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -120,7 +122,10 @@ namespace ForumSnackis.Server.Data.Migrations
                     b.Property<DateTime>("PostDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("PostedById")
+                    b.Property<int>("PostedById")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PostedById1")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("QuoteId")
@@ -131,7 +136,7 @@ namespace ForumSnackis.Server.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PostedById");
+                    b.HasIndex("PostedById1");
 
                     b.HasIndex("QuoteId");
 
@@ -442,7 +447,7 @@ namespace ForumSnackis.Server.Data.Migrations
                 {
                     b.HasOne("ForumSnackis.Server.Models.ApplicationUser", "PostedBy")
                         .WithMany("Posts")
-                        .HasForeignKey("PostedById");
+                        .HasForeignKey("PostedById1");
 
                     b.HasOne("ForumSnackis.Server.Models.Post", "Quote")
                         .WithMany()

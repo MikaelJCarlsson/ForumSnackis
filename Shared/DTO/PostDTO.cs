@@ -8,7 +8,8 @@ namespace ForumSnackis.Shared.DTO
         public string Content { get; set; }
         public DateTime PostDate { get; set; }
         public string PostedBy { get; set; }
-
+        public DateTime AccountCreated { get; set; }
+        public int PostCount { get; set; }
         public int SubjectId { get; set; }
 
         public string? QuoteContent { get; set; }
