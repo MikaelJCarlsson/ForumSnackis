@@ -73,6 +73,27 @@ namespace ForumSnackis.Server.Services
             }
            
         }
+
+        internal async Task<int> UpdateAsync(int id, PostDTO post, ClaimsPrincipal claim)
+        {
+            try
+            {
+                var query = await dbContext.Posts.Include(x => x.PostedBy).Where(x => x.Id == id).FirstOrDefaultAsync();
+                var user = claim.Claims.First().Value;
+                if (user.Equals(query.PostedBy.Id) || claim.IsInRole("Administrators"))
+                {
+                        query.Content = post.Content;
+                        dbContext.Update(query);
+                    return await dbContext.SaveChangesAsync();
+                }
+                return 0;
+            }
+            catch (Exception)
+            {
+                return 0;
+            }
+        }
+
         internal async Task<List<PostDTO>> GetReportsAsync()
         {
             try

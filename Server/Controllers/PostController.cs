@@ -1,4 +1,5 @@
 ﻿using ForumSnackis.Server.Services;
+using ForumSnackis.Shared.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -55,7 +56,16 @@ namespace ForumSnackis.Server.Controllers
                 return Ok();
             }
         }
-
+        [HttpPut("{id}")]
+        [Authorize(Roles = "Administrators")]
+        public async Task<IActionResult> Put(int id, [FromBody] PostDTO post)
+        {
+            var result = await service.UpdateAsync(id, post,User);
+            if (result != 0)
+                return Ok();
+            else
+                return StatusCode(409);
+        }
 
     }
 }
