@@ -57,7 +57,7 @@ namespace ForumSnackis.Server.Controllers
             }
         }
         [HttpPut("{id}")]
-        [Authorize(Roles = "Administrators")]
+        [Authorize]
         public async Task<IActionResult> Put(int id, [FromBody] PostDTO post)
         {
             var result = await service.UpdateAsync(id, post,User);
@@ -66,6 +66,15 @@ namespace ForumSnackis.Server.Controllers
             else
                 return StatusCode(409);
         }
-
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Administrators")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var post = await service.DeleteAsync(id);
+            if (post != 0)
+                return Ok();
+            else
+                return NotFound();
+        }
     }
 }

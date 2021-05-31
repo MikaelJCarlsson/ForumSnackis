@@ -74,6 +74,20 @@ namespace ForumSnackis.Server.Services
            
         }
 
+        internal async Task<int> DeleteAsync(int id)
+        {
+            try
+            {
+                var post = await dbContext.Posts.FindAsync(id);
+                dbContext.Remove(post);
+                return await dbContext.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                return 0;
+            }
+        }
+
         internal async Task<int> UpdateAsync(int id, PostDTO post, ClaimsPrincipal claim)
         {
             try
