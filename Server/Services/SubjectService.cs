@@ -52,7 +52,12 @@ namespace ForumSnackis.Server.Services
         {
             try
             {
-                var subject = await dbContext.Subjects.Where(x => x.Id == id).Include(x => x.Posts).ThenInclude(x => x.PostedBy).FirstOrDefaultAsync();
+                var subject = await dbContext.Subjects.Where(x => x.Id == id)
+                                                      .Include(x => x.Posts)
+                                                      .ThenInclude(x => x.PostedBy)
+                                                      .Include(x => x.Posts)
+                                                      .ThenInclude(p => p.Quote)
+                                                      .FirstOrDefaultAsync();
 
                 List<PostDTO> posts = new();
                 if (subject is not null)
@@ -67,7 +72,9 @@ namespace ForumSnackis.Server.Services
                                 PostDate = post.PostDate,
                                 PostedBy = post.PostedBy?.UserName,
                                 SubjectId = post.SubjectId,
-                                Quote = post.Quote?.Content,
+                                QuoteContent = post.Quote?.Content,
+                                QuoteId = post.Quote?.Id,
+                                QuotePostedBy = post.Quote?.PostedBy.UserName
                             });
                     }
                     return posts;
@@ -107,6 +114,14 @@ namespace ForumSnackis.Server.Services
         {
             var subject = await dbContext.Subjects.Include(x => x.Posts).Where(x => x.Id == post.SubjectId).FirstOrDefaultAsync();
             var user = await FetchUserId(claims.Claims.First().Value);
+            Post quotedPost;
+
+            if (post.QuoteId > 0)
+                quotedPost = await dbContext.Posts.FindAsync(post.QuoteId);
+            else
+                quotedPost = null;
+            
+
             if(subject != null)
             {
                 var newPost = new Post()
@@ -114,7 +129,8 @@ namespace ForumSnackis.Server.Services
                     SubjectId = subject.Id,
                     Content = post.Content,
                     PostedBy = user,
-                    PostDate = DateTime.Now
+                    PostDate = DateTime.Now,
+                    Quote = quotedPost
                 };
                 subject.Posts.Add(newPost);
                 return await dbContext.SaveChangesAsync();

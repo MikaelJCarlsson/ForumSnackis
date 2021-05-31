@@ -49,5 +49,10 @@ namespace ForumSnackis.Client.Shared
             }
            
         }
+
+        private async Task UpdatePosts()
+        {
+            await OnParametersSetAsync();
+        }
     }
 }

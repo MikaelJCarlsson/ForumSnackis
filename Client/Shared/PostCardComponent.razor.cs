@@ -15,7 +15,12 @@ namespace ForumSnackis.Client.Shared
         public PostDTO Post { get; set; }
         [Inject]
         public IHttpClientFactory HttpFactory { get; set; }
-        protected override async Task OnParametersSetAsync()
+        public PostDTO Reply { get; set; }
+        public bool ShowReplyForm { get; set; }
+        [Parameter]
+        public EventCallback UpdatePosts { get; set; }
+
+    protected override async Task OnParametersSetAsync()
         {
             this.StateHasChanged();
         }
@@ -30,8 +35,41 @@ namespace ForumSnackis.Client.Shared
                 { 
                     return;
                 }
-            return;
             }
         }
+
+        private void ToggleReplyForm(bool show)
+        {
+            if (show)
+            {
+                if (Reply is null)
+                {
+                    Reply = new();
+                    Reply.QuoteContent = $"\"{Post.Content}\"";
+                }
+                ShowReplyForm = true;
+            }
+            else
+            {
+                ShowReplyForm = false;
+            }
+        }
+        private async Task CreateReply()
+        {
+            if (Reply is not null)
+            {
+                Reply.SubjectId = Post.SubjectId;
+                Reply.QuoteId = Post.Id;
+                var privateHttp = HttpFactory.CreateClient("private");
+                var result = await privateHttp.PostAsJsonAsync($"api/Subject/Posts/", Reply);
+
+                if (result.IsSuccessStatusCode)
+                {
+                    await UpdatePosts.InvokeAsync();
+                    ToggleReplyForm(false);
+                }
+            }
+        }
+
     }
 }
