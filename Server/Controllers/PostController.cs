@@ -23,10 +23,22 @@ namespace ForumSnackis.Server.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var posts = await service.GetAsync();
+            var posts = await service.GetReportsAsync();
             if (posts is not null)
                 return Ok(posts);
             else return NotFound();
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int id)
+        {
+
+            var post = await service.GetAsync(id);
+            if (post is not null)
+                return Ok(post);
+            else
+                return NotFound();
+
         }
         [Authorize]
         [HttpPost("Report/")]

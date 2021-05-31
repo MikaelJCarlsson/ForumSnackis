@@ -47,8 +47,33 @@ namespace ForumSnackis.Server.Services
                 return 0;
             }
         }
-
-        internal async Task<List<PostDTO>> GetAsync()
+        internal async Task<PostDTO> GetAsync(int id)
+        {
+            try
+            {
+                var post = await dbContext.Posts.Include(x => x.PostedBy).Where(x => x.Id == id).FirstOrDefaultAsync();
+                if(post != null)
+                {
+                    var postDto = new PostDTO
+                    {
+                        PostDate = post.PostDate,
+                        Content = post.Content,
+                        Id = post.Id,
+                        PostedBy = post.PostedBy.UserName,
+                        SubjectId = post.SubjectId
+                     
+                    };
+                    return postDto;
+                }
+                return null;
+            }
+            catch(Exception)
+            {
+                return null;
+            }
+           
+        }
+        internal async Task<List<PostDTO>> GetReportsAsync()
         {
             try
             {
