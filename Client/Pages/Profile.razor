@@ -1,0 +1,46 @@
+﻿@page "/Profile"
+
+<AuthorizeView Context="AuthContext">
+    <Authorized>
+        <h3>@AuthContext.User.Identity.Name</h3>
+
+        <h4>Add Profile Image</h4>
+        <div class="mb-3">
+            <InputFile class="form-control form-control-sm" aria-label="Upload image" OnChange="@OnInputFileChange" multiple />
+        </div>
+
+        @if (files.Count > 0)
+        {
+            <div class="card">
+                <div class="card-body">
+                    <ul>
+                        @foreach (var file in files)
+                        {
+                            <li>
+                                File: @file.Name
+                                <br>
+                                @if (FileUpload(uploadResults, file.Name, out var result))
+                                {
+                                    <span>
+                                        Stored File Name: @result.StoredFileName
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span>
+                                        There was an error uploading the file
+                                        (Error: @result.ErrorCode).
+                                    </span>
+                                }
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        }
+        </Authorized>
+    <NotAuthorized>
+
+    </NotAuthorized>
+</AuthorizeView>
+
