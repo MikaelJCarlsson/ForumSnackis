@@ -13,22 +13,19 @@ namespace ForumSnackis.Client.Shared
 {
     public partial class PostCardComponent : ComponentBase
     {
-        [CascadingParameter]
-        private Task<AuthenticationState> authenticationStateTask { get; set; }
         [Parameter]
         public PostDTO Post { get; set; }
         [Inject]
         public IHttpClientFactory HttpFactory { get; set; }
         public PostDTO Reply { get; set; }
-        public bool ShowReplyForm { get; set; }
+        private bool ShowReplyForm { get; set; }
+        private bool ShowEditForm { get; set; }
+        public PostDTO EditedPost { get; set; }
+
+
         [Parameter]
         public EventCallback UpdatePosts { get; set; }
-        public ClaimsPrincipal CurrentUser { get; set; }
 
-        protected override async Task OnInitializedAsync()
-        {
-            CurrentUser = (await authenticationStateTask).User;         
-        }
         protected override async Task OnParametersSetAsync()
         {
             
@@ -91,6 +88,31 @@ namespace ForumSnackis.Client.Shared
                     await UpdatePosts.InvokeAsync();
                     ToggleReplyForm(false);
                 }
+            }
+        }
+        private void ToggleEditForm(bool show)
+        {
+            if (show)
+            { 
+                EditedPost = new();
+                EditedPost.Id = Post.Id;
+                EditedPost.Content = Post.Content;
+                ShowEditForm = true;
+            }
+            else
+            {
+                ShowEditForm = false;
+            }
+
+        }
+        private async Task EditPost()
+        {
+            var privateHttp = HttpFactory.CreateClient("private");
+            var result = await privateHttp.PutAsJsonAsync($"api/Post/{EditedPost.Id}", EditedPost);
+            if (result.IsSuccessStatusCode)
+            {
+                await UpdatePosts.InvokeAsync();
+                ToggleEditForm(false);
             }
         }
 

@@ -12,15 +12,18 @@
             <PostCardComponent Post="post" UpdatePosts="UpdatePosts"></PostCardComponent>
         }
     }
+
+    <AuthorizeView Context="AuthContext">
+        <Authorized>
+            <EditForm Model="NewPost" OnSubmit="CreatePost">
+                <div class="form-floating m-3">
+                    <InputTextArea class="form-control" placeholder="Submit your post" style="height: 100px" @bind-Value="NewPost.Content"></InputTextArea>
+                    <button class="btn btn-primary btn-sm" type="submit">Submit</button>
+                </div>
+            </EditForm>
+        </Authorized>
+    </AuthorizeView>
 </div>
-<AuthorizeView Context="AuthContext">
-    <Authorized>
-        <EditForm Model="NewPost" OnSubmit="CreatePost">
-            <InputText @bind-Value="NewPost.Content" DisplayName="Message Here"></InputText>
-            <button type="submit">Submit</button>
-        </EditForm>
-    </Authorized>
-</AuthorizeView>
 
 
 

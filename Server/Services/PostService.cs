@@ -98,6 +98,7 @@ namespace ForumSnackis.Server.Services
             try
             {
                 var query = await dbContext.Posts.Include(x => x.PostedBy).Where(x => x.Id == id).FirstOrDefaultAsync();
+                var cls = claim.Claims;
                 var user = claim.Claims.First().Value;
                 if (user.Equals(query.PostedBy.Id) || claim.IsInRole("Administrators"))
                 {
