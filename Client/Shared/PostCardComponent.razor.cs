@@ -1,16 +1,20 @@
 ﻿using ForumSnackis.Shared.DTO;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace ForumSnackis.Client.Shared
 {
     public partial class PostCardComponent : ComponentBase
     {
+        [CascadingParameter]
+        private Task<AuthenticationState> authenticationStateTask { get; set; }
         [Parameter]
         public PostDTO Post { get; set; }
         [Inject]
@@ -19,9 +23,15 @@ namespace ForumSnackis.Client.Shared
         public bool ShowReplyForm { get; set; }
         [Parameter]
         public EventCallback UpdatePosts { get; set; }
+        public ClaimsPrincipal CurrentUser { get; set; }
 
-    protected override async Task OnParametersSetAsync()
+        protected override async Task OnInitializedAsync()
         {
+            CurrentUser = (await authenticationStateTask).User;         
+        }
+        protected override async Task OnParametersSetAsync()
+        {
+            
             this.StateHasChanged();
         }
 

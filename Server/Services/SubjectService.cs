@@ -68,6 +68,7 @@ namespace ForumSnackis.Server.Services
                             new PostDTO()
                             {
                                 Id = post.Id,
+                                UserId = post.PostedBy.Id,
                                 Content = post.Content,
                                 PostDate = post.PostDate,
                                 PostedBy = post.PostedBy?.UserName,

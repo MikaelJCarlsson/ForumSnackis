@@ -40,7 +40,13 @@
                     <div class="btn-group btn-group-sm pt-3 px-3">
                         <button type="button" class="btn btn-primary" @onclick="() => ToggleReplyForm(true)"><i class="oi oi-comment-square"></i></button>
                         <button type="button" class="btn btn-warning" @onclick="() => ReportPost(Post.Id)" style="color:white"><i class="oi oi-flag"></i></button>
-                        <button type="button" class="btn btn-success"><i class="oi oi-pencil"></i></button>
+                        @if (CurrentUser.Claims != null)
+                        {
+                            @if (CurrentUser.Claims.First().Value.Equals(Post.UserId) || CurrentUser.IsInRole("Administrators"))
+                            {
+                                <button type="button" class="btn btn-success"><i class="oi oi-pencil"></i></button>
+                            }
+                        }
                         <AuthorizeView Roles="Administrators">
                             <Authorized>
                                 <button type="button" class="btn btn-danger" @onclick="() => DeletePost()"><i class="oi oi-x"></i></button>

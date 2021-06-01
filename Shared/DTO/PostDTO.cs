@@ -11,7 +11,7 @@ namespace ForumSnackis.Shared.DTO
         public DateTime AccountCreated { get; set; }
         public int PostCount { get; set; }
         public int SubjectId { get; set; }
-
+        public string UserId { get; set; }
         public string? QuoteContent { get; set; }
         public int? QuoteId { get; set; }
         public string? QuotePostedBy { get; set; }
