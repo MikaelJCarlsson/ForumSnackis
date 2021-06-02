@@ -26,7 +26,6 @@ namespace ForumSnackis.Client
 
             builder.Services.AddHttpClient("public", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
             builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("public"));
-
             builder.Services.AddApiAuthorization();
 
             await builder.Build().RunAsync();
