@@ -33,6 +33,14 @@ namespace ForumSnackis.FilterApi
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ForumSnackis.FilterApi", Version = "v1" });
             });
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                builder.WithOrigins("https://localhost:44317")
+                       .AllowAnyMethod()
+                       .AllowAnyHeader());
+            });
+
             services.AddScoped<FilterService>();
         }
 
@@ -49,6 +57,7 @@ namespace ForumSnackis.FilterApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseCors();
 
             app.UseAuthorization();
 
