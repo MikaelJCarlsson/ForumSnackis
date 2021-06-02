@@ -23,7 +23,7 @@ namespace ForumSnackis.Client.Pages
 			var files = e.GetMultipleFiles();
 			foreach (var file in files)
 			{
-				var resizedFile = await file.RequestImageFileAsync(file.ContentType, 640, 480); // resize the image file
+				var resizedFile = await file.RequestImageFileAsync(file.ContentType, 64, 64); // resize the image file
 				var buf = new byte[resizedFile.Size];
 				using (var stream = resizedFile.OpenReadStream())
 				{
