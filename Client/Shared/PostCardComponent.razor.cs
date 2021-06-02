@@ -81,13 +81,18 @@ namespace ForumSnackis.Client.Shared
                 Reply.SubjectId = Post.SubjectId;
                 Reply.QuoteId = Post.Id;
                 var privateHttp = HttpFactory.CreateClient("private");
-                var result = await privateHttp.PostAsJsonAsync($"api/Subject/Posts/", Reply);
-
-                if (result.IsSuccessStatusCode)
+                var filterdString = await privateHttp.PostAsJsonAsync("https://localhost:44353/Filter", Reply.Content);
+                if (filterdString.IsSuccessStatusCode)
                 {
-                    await UpdatePosts.InvokeAsync();
-                    ToggleReplyForm(false);
-                }
+                    Reply.Content = await filterdString.Content.ReadAsStringAsync();
+                    var result = await privateHttp.PostAsJsonAsync($"api/Subject/Posts/", Reply);
+
+                    if (result.IsSuccessStatusCode)
+                    {
+                        await UpdatePosts.InvokeAsync();
+                        ToggleReplyForm(false);
+                    }
+                } 
             }
         }
         private void ToggleEditForm(bool show)
