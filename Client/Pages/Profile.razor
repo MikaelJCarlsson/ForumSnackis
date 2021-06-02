@@ -1,18 +1,24 @@
 ﻿@page "/Profile"
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
-@attribute [Authorize(Roles = "Administrators")]
-<h1>@message</h1>
 
-<div class="input-group">
-    <div class="custom-file">
-        <InputFile class="custom-file-input" multiple OnChange="OnChange" accept="image/png, image/jpeg, image/gif" id="inputFile" />
-        <label class="custom-file-label" for="inputFile">Choose file</label>
-    </div>
-    <div class="input-group-append">
-        <button class="btn btn-success" @onclick="Upload" disabled="@isDisabled">Upload</button>
-    </div>
-</div>
+<AuthorizeView>
+    <Authorized>
+        <h1>@context.User.Identity.Name</h1>
+
+        <div class="input-group">
+            <div class="custom-file">
+                <InputFile class="custom-file-input" OnChange="OnChange" accept="image/png, image/jpeg, image/gif" id="inputFile" />
+                <label class="custom-file-label" for="inputFile">Choose file</label>
+            </div>
+            <div class="input-group-append">
+                <button class="btn btn-success" @onclick="Upload" disabled="@isDisabled">Upload</button>
+            </div>
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+
 
 @foreach (var item in filesBase64)
 {

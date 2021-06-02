@@ -77,7 +77,8 @@ namespace ForumSnackis.Server.Services
                                 QuoteId = post.Quote?.Id,
                                 QuotePostedBy = post.Quote?.PostedBy.UserName,
                                 PostCount = post.PostedBy.Posts.Count(),
-                                AccountCreated = post.PostedBy.RegistrationDate
+                                AccountCreated = post.PostedBy.RegistrationDate,
+                                ImagePath = post.PostedBy?.ImagePath
                             }) ;
                     }
                     return posts;

@@ -61,6 +61,7 @@ namespace ForumSnackis.Server.Services
                         Id = post.Id,
                         PostedBy = post.PostedBy.UserName,
                         SubjectId = post.SubjectId
+                        
                      
                     };
                     return postDto;

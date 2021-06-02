@@ -60,6 +60,7 @@ namespace ForumSnackis.Server
             services.AddScoped<CategoryService>();
             services.AddScoped<SubjectService>();
             services.AddScoped<PostService>();
+            services.AddScoped<ImageService>();
 
 
             services.AddHttpClient();

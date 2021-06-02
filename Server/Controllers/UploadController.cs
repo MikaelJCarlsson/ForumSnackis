@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
+using ForumSnackis.Server.Services;
 using ForumSnackis.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,19 +17,31 @@ using Microsoft.Extensions.Logging;
 public class UploadController : ControllerBase
 {
 	private readonly IWebHostEnvironment env;
+	private readonly ImageService service;
 
-	public UploadController(IWebHostEnvironment env)
+	public UploadController(IWebHostEnvironment env, ImageService imageService)
 	{
 		this.env = env;
+		service = imageService;
 	}
 
 	[HttpPost]
+	[Authorize]
 	public async Task Post([FromBody] ImageFile[] files)
 	{
-		foreach (var file in files)
-		{
-			var buf = Convert.FromBase64String(file.base64data);
-			await System.IO.File.WriteAllBytesAsync(env.ContentRootPath + "\\" + Guid.NewGuid().ToString("N") + "-" + file.fileName, buf);
-		}
+		await service.UploadFileAsync(files, User);
 	}
+
+    [HttpGet("{id}")]
+    public async Task Get(string id)
+    {
+        var imageResult = await service.GetImage(id);
+		if(imageResult is not null)
+        {
+			Ok(imageResult);
+        } else
+        {
+			NotFound();
+        }
+    }
 }
