@@ -18,11 +18,11 @@ namespace ForumSnackis.Server.Data
         {
         }
 
-
         public DbSet<ForumCategory> ForumCategories { get; set; }
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<Report> Reports { get; set; }
-
+        public DbSet<ChatRoom> ChatRooms { get; set; }
+        public DbSet<ChatMessage> ChatMessages { get; set; }
     }
 }

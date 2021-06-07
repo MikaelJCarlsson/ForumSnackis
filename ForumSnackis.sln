@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ForumSnackis.Client", "Clie
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ForumSnackis.Shared", "Shared\ForumSnackis.Shared.csproj", "{D25B0C91-3397-4E43-B4A5-081CDFC70077}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ForumSnackis.FilterApi", "ForumSnackis.FilterApi\ForumSnackis.FilterApi.csproj", "{B820C812-3E6D-43A5-96D2-331A32CB059D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ForumSnackis.FilterApi", "ForumSnackis.FilterApi\ForumSnackis.FilterApi.csproj", "{B820C812-3E6D-43A5-96D2-331A32CB059D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

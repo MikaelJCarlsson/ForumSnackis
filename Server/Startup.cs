@@ -1,4 +1,5 @@
 using ForumSnackis.Server.Data;
+using ForumSnackis.Server.Hubs;
 using ForumSnackis.Server.Models;
 using ForumSnackis.Server.Services;
 using Microsoft.AspNetCore.Authentication;
@@ -53,10 +54,14 @@ namespace ForumSnackis.Server
              .DefaultInboundClaimTypeMap.Remove("role");
 
 
-           
+            services.AddSignalR();
             services.AddControllersWithViews();
             services.AddRazorPages();
-
+            services.AddResponseCompression(opts =>
+            {
+                opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+                    new[] { "application/octet-stream" });
+            });
             services.AddScoped<CategoryService>();
             services.AddScoped<SubjectService>();
             services.AddScoped<PostService>();
@@ -70,6 +75,7 @@ namespace ForumSnackis.Server
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseResponseCompression();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -97,6 +103,7 @@ namespace ForumSnackis.Server
             {
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
+                endpoints.MapHub<ChatHub>("/chathub");
                 endpoints.MapFallbackToFile("index.html");
             });
         }

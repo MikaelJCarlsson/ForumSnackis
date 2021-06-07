@@ -35,14 +35,15 @@ namespace ForumSnackis.Client.Shared
         {
             if (NewPost is not null && CurrentSubject is not null)
             {
-             
-                NewPost.SubjectId = CurrentSubject.Id;
                 var privateHttp = HttpFactory.CreateClient("private");
+                NewPost.SubjectId = CurrentSubject.Id;
+                /*                
+
                 var filterdString = await privateHttp.PostAsJsonAsync("https://localhost:44353/Filter", NewPost.Content);
                 if (filterdString.IsSuccessStatusCode)
                 {
                     NewPost.Content = await filterdString.Content.ReadAsStringAsync();
-                }
+                }*/
                 var request = await privateHttp.PostAsJsonAsync($"api/Subject/Posts/",NewPost);
 
                 if (request.IsSuccessStatusCode)
