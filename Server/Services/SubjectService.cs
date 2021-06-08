@@ -79,7 +79,9 @@ namespace ForumSnackis.Server.Services
                                 PostCount = post.PostedBy.Posts.Count(),
                                 AccountCreated = post.PostedBy.RegistrationDate,
                                 ImagePath = post.PostedBy?.ImagePath,
-                                LikeCount = post.LikeCount
+                                LikeCount = post.LikeCount,
+                                DislikeCount = post.DislikeCount
+                                
                             });
                     }
                     return posts;

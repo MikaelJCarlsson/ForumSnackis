@@ -35,13 +35,16 @@
                         }
                         @Post.Content
                     </div>
-                    
+
                     <div class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3">
-                        <div class="px-4 pt-3"> <a style="color: #dc3545;" @onclick="() => LikePostAsync(true)" class="d-inline-flex align-items-center align-middle oi oi-heart" data-abc="true">
-                             <i class="fa fa-heart text-danger"></i>&nbsp; <span  class="align-middle">@Post.LikeCount</span>
-                             </a> <span class="text-muted d-inline-flex align-items-center align-middle ml-4">
-                                 <i class="fa fa-eye text-muted fsize-3"></i>&nbsp; <span class="align-middle">14532</span>
-                                 </span> </div>
+                        <div class="px-4 pt-3">
+                            <a style="color: dodgerblue;" @onclick="() => LikePostAsync(true)" class="d-inline-flex align-items-center align-middle oi oi-thumb-up" data-abc="true">
+                                <i class="fa fa-heart text-danger"></i>&nbsp; <span class="align-middle">@Post.LikeCount</span>
+                            </a>
+                            <a style="color: firebrick;" @onclick="() => DislikePostAsync(true)" class="d-inline-flex align-items-center align-middle oi oi-thumb-down" data-abc="true">
+                                <i class="fa fa-heart text-danger"></i>&nbsp; <span class="align-middle">@Post.DislikeCount</span>
+                            </a>
+                        </div>
                         <div class="btn-group btn-group-sm pt-3 px-3">
                             <AuthorizeView>
                                 <Authorized>

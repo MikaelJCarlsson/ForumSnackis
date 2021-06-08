@@ -17,5 +17,6 @@ namespace ForumSnackis.Shared.DTO
         public int? QuoteId { get; set; }
         public string? QuotePostedBy { get; set; }
         public int LikeCount { get; set; }
+        public int DislikeCount { get; set; }
     }
 }
