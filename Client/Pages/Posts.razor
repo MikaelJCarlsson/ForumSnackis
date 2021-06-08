@@ -2,20 +2,24 @@
 @if (Subject != null)
 {
     <h1>@Subject.Title</h1>
-    <h1>@SubjectId</h1>
 }
-<AuthorizeView>
-    <Authorized>
-        <button @onclick="() => SubjectForm = true">Create new Subject</button>
-    </Authorized>
-</AuthorizeView>
-
 
 <div class="list-group">
     @if (Subject is not null && Subject.Posts is not null)
     {
-            <Virtualize Items="@Subject.Posts" Context="post">
-                <PostCardComponent Post="post" UpdatePosts="UpdatePosts"></PostCardComponent>
-            </Virtualize>
+        <Virtualize Items="@Subject.Posts" Context="post">
+            <PostCardComponent Post="post" UpdatePosts="UpdatePosts"></PostCardComponent>
+        </Virtualize>
     }
 </div>
+
+<AuthorizeView Context="AuthContext">
+    <Authorized>
+        <EditForm Model="NewPost" OnSubmit="CreatePost">
+            <div class="form-floating m-3">
+                <InputTextArea class="form-control" placeholder="Submit your post" style="height: 100px" @bind-Value="NewPost.Content"></InputTextArea>
+                <button class="btn btn-primary btn-sm" type="submit">Submit</button>
+            </div>
+        </EditForm>
+    </Authorized>
+</AuthorizeView>

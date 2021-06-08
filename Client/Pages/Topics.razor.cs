@@ -24,25 +24,24 @@ namespace ForumSnackis.Client.Pages
         public CreateSubjectCommand NewSubject { get; set; } = new();
 
         public string NewSubjectTitle = "";
+        private HttpClient publicHttp;
+        private HttpClient privateHttp;
 
         protected override async Task OnParametersSetAsync() =>
             Category = await GetSubjects();
         private async Task<CategoryDTO> GetSubjects()
         {
-            var publicHttp = HttpFactory.CreateClient("public");
+            publicHttp = HttpFactory.CreateClient("public");
             var request = await publicHttp.GetAsync($"api/Category/Subjects/{CategoryId}");
 
             if (request.IsSuccessStatusCode)
-            {
                 return await request.Content.ReadFromJsonAsync<CategoryDTO>();
-            }
-            return null;
+            else
+                return default;
         }
 
-        public async Task SubjectComponentChanged()
-        {
-          await GetSubjects();
-        }
+        public async Task SubjectComponentChanged() =>
+            Category = await GetSubjects();
 
         public async Task CreateSubject()
         {
@@ -52,21 +51,18 @@ namespace ForumSnackis.Client.Pages
 
                 if (CategoryId > 0)
                 {
-                    var privateHttp = HttpFactory.CreateClient("private");
-                    var result = await privateHttp.PostAsJsonAsync($"api/Subject/",NewSubject);
+                    privateHttp = HttpFactory.CreateClient("private");
+                    var result = await privateHttp.PostAsJsonAsync($"api/Subject/", NewSubject);
 
                     if (result.IsSuccessStatusCode)
                     {
                         var publicHttp = HttpFactory.CreateClient("public");
 
-                        var request = await publicHttp.GetAsync($"api/Category/Subjects/{Category.Id}");
+                        var request = await publicHttp.GetAsync("api/Category/Subjects/{Category.Id}");
                         Category = await request.Content.ReadFromJsonAsync<CategoryDTO>();
-                        StateHasChanged();
                     }
                 }
             }
         }
-
     }
-
 }

@@ -2,11 +2,13 @@ using ForumSnackis.Client.Shared;
 using ForumSnackis.Shared;
 using ForumSnackis.Shared.DTO;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace ForumSnackis.Client.Pages
@@ -20,50 +22,90 @@ namespace ForumSnackis.Client.Pages
         [Inject]
         public IHttpClientFactory HttpFactory { get; set; }
         public int SubjectsDTO { get; private set; }
-        public bool SubjectForm { get; set; }
-        public CreateSubjectCommand NewSubject { get; set; } = new();
-
-        public string NewSubjectTitle = "";
         private HttpClient publicHttp;
+        private ClaimsPrincipal user;
+        private HttpClient privateHttp;
+
+        public PostDTO NewPost { get; set; } = new();
+
+        [CascadingParameter]
+        private Task<AuthenticationState> authenticationStateTask { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
-            if (publicHttp is null)
-                publicHttp = HttpFactory.CreateClient("public");
-            if (Subject is null)
-                Subject = await GetSubject() ?? new();
-            if (Subject.Posts is null)
-                Subject.Posts = await GetPosts() ?? new();
+            Subject ??= await GetSubject();
+            Subject.Posts ??= await GetPosts();
         }
+
+        private bool CreatePublicHttpClient()
+        {
+            publicHttp ??= HttpFactory.CreateClient("public");
+            return !(publicHttp is null);
+        }
+
+        private async Task<bool> CreatePrivateHttpClientAsync()
+        {
+            if (privateHttp is null)
+            {
+                if (user is null)
+                {
+                    var authState = await authenticationStateTask;
+                    user = authState.User;
+                }
+
+                if (user.Identity.IsAuthenticated)
+                    privateHttp = HttpFactory.CreateClient("private");
+            }
+
+            return !(privateHttp is null);
+        }
+
         protected override async Task OnParametersSetAsync() =>
             Subject.Posts ??= await GetPosts();
         private async Task<List<PostDTO>> GetPosts()
         {
-            if (publicHttp == null)
-                return null;
+            if (publicHttp is null)
+                CreatePublicHttpClient();
 
             var request = await publicHttp.GetAsync($"api/Subject/Posts/{SubjectId}");
 
             if (request.IsSuccessStatusCode)
                 return await request.Content.ReadFromJsonAsync<List<PostDTO>>();
             else
-                return null;
+                return default;
         }
 
         private async Task<SubjectsDTO> GetSubject()
         {
-            if (publicHttp == null)
-                return null;
+            if (publicHttp is null)
+                CreatePublicHttpClient();
 
             var request = await publicHttp.GetAsync($"api/Subject/{SubjectId}");
 
             if (request.IsSuccessStatusCode)
                 return await request.Content.ReadFromJsonAsync<SubjectsDTO>();
             else
-                return null;
+                return default;
         }
         public async Task UpdatePosts() =>
-            Subject.Posts ??= await GetPosts();
+            Subject.Posts = await GetPosts() ?? new();
+
+        public async Task CreatePost()
+        {
+            if (privateHttp is null && await CreatePrivateHttpClientAsync() && NewPost?.Content?.Length > 2)
+            {
+                NewPost.SubjectId = SubjectId;
+
+                var request = await privateHttp.PostAsJsonAsync("api/Subject/Posts/", NewPost);
+
+                if (request.IsSuccessStatusCode)
+                {
+                    NewPost.Content = "";
+                    await GetPosts();
+                }
+            }
+        }
     }
 }
+
 
