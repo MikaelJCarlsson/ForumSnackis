@@ -77,7 +77,8 @@ namespace RoleEnabledWebAssembly.Server.Areas.Identity.Pages
                     new ApplicationUser
                     {
                         UserName = Input.Email,
-                        Email = Input.Email
+                        Email = Input.Email,
+                        ImagePath = "https://cdn.frankerfacez.com/emoticon/447568/4"
                     };
                 var result =
                     await _userManager.CreateAsync(user, Input.Password);

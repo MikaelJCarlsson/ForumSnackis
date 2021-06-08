@@ -15,8 +15,9 @@ namespace ForumSnackis.Client.Pages
 		List<ImageFile> filesBase64 = new List<ImageFile>();
 		string message = "InputFile";
 		bool isDisabled = false;
-
-		[Inject]
+		[Parameter]
+        public string UserName { get; set; }
+        [Inject]
 		public IHttpClientFactory HttpFactory { get; set; }
 		async Task OnChange(InputFileChangeEventArgs e)
 		{
