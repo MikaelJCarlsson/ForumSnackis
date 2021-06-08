@@ -9,12 +9,12 @@ using ForumSnackis.Shared.DTO;
 using ForumSnackis.Shared;
 namespace ForumSnackis.Client.Shared
 {
-    public partial class SubjectsComponent : ComponentBase
+    public partial class SubjectComponent : ComponentBase
     {
         [Parameter]
-        public CategoryDTO Category { get; set; }
+        public SubjectsDTO Subject { get; set; }
         [Parameter]
-        public EventCallback<SubjectsDTO> SubjectPosts { get; set; }
+        public EventCallback SubjectUpdateEvent { get; set; }
         [Inject]
         public IHttpClientFactory HttpFactory { get; set; }
         public int SubjectsDTO { get; private set; }
@@ -25,51 +25,9 @@ namespace ForumSnackis.Client.Shared
         private int ShowInputFieldForId;
         public string NewSubjectTitle = "";
 
-        protected override async Task OnParametersSetAsync()
-        {
-            if (Category is not null)
-            {
-                var publicHttp = HttpFactory.CreateClient("public");
-                var request = await publicHttp.GetAsync($"api/Category/Subjects/{Category.Id}");
-
-                if (request.IsSuccessStatusCode)
-                {
-                    Category = await request.Content.ReadFromJsonAsync<CategoryDTO>();
-                }
-            }
-        }
-
-        public async void OpenSubject(SubjectsDTO subject)
-        {
-            await SubjectPosts.InvokeAsync(subject);
-
-        }
-        public async void CreateSubject()
-        {
-            if(Category != null && NewSubject != null)
-            {         
-                NewSubject.CategoryId = Category.Id;
-
-                if (Category.Id > 0)
-                {
-                    var privateHttp = HttpFactory.CreateClient("private");
-                    var result = await privateHttp.PostAsJsonAsync($"api/Subject/",NewSubject);
-
-                    if (result.IsSuccessStatusCode)
-                    {
-                        var publicHttp = HttpFactory.CreateClient("public");
-               
-                        var request = await publicHttp.GetAsync($"api/Category/Subjects/{Category.Id}");
-                        Category = await request.Content.ReadFromJsonAsync<CategoryDTO>();
-                        StateHasChanged();
-                    }
-                }
-            }
-        }
-
         private void ToggleSubjectEditForm(int id)
         {
-            if (ShowInputField == true)
+            if (ShowInputField)
             {
                 ShowInputFieldForId = 0;
                 ShowInputField = false;
@@ -89,6 +47,7 @@ namespace ForumSnackis.Client.Shared
             {
                 ToggleSubjectEditForm(0);
                 await OnParametersSetAsync();
+                await SubjectUpdateEvent.InvokeAsync();
             }
         }
 
@@ -102,6 +61,7 @@ namespace ForumSnackis.Client.Shared
                 NewSubjectTitle = "";
                 ToggleSubjectEditForm(0);
                 await OnParametersSetAsync();
+                await SubjectUpdateEvent.InvokeAsync();
             }
         }
     }

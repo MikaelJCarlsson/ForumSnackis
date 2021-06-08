@@ -1,0 +1,30 @@
+﻿
+@page "/Topic/{CategoryId:int}"
+@if (Category != null)
+{
+    <h1>@Category.Title</h1>
+    <h1>@CategoryId</h1>
+}
+<AuthorizeView>
+    <Authorized>
+        <button @onclick="() => SubjectForm = true">Create new Subject</button>
+    </Authorized>
+</AuthorizeView>
+@if (SubjectForm == true)
+{
+    <EditForm Model="NewSubject" OnSubmit="CreateSubject">
+        <InputText @bind-Value="NewSubject.Title" DisplayName="Subject Name"></InputText>
+        <InputText @bind-Value="NewSubject.FirstPost" DisplayName="Subject Name"></InputText>
+        <button type="submit">Submit</button>
+    </EditForm>
+}
+
+
+<div class="list-group">
+    @if (Category is not null && Category.subjects is not null)
+    {
+            <Virtualize Items="@Category.subjects" Context="subject">
+               <SubjectComponent Subject="subject" SubjectUpdateEvent="SubjectComponentChanged"></SubjectComponent> 
+            </Virtualize>
+    }
+</div>

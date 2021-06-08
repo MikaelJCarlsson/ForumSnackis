@@ -1,0 +1,27 @@
+﻿<AuthorizeView Roles="Administrators">
+    <Authorized>
+        <div class="btn-group btn-group-sm col col-1">
+            <button class="btn btn-primary oi oi-cog" @onclick="() => ToggleSubjectEditForm(Subject.Id)"></button>
+            <button class="btn btn-danger oi oi-circle-x" @onclick="() => DeleteSubject(Subject)"></button>
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+<NavLink href="@($"Topic/Posts/{Subject.Id}")"  class="list-group-item list-group-item-action bg-light" aria-current="false">
+    <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1">@Subject.Title</h5>
+        <small>Last post @Subject.TimeStamp.ToShortDateString()</small>
+        <small>Posts @Subject.PostAmount</small>
+    </div>
+    <small>Created by @Subject.CreatedBy.</small>
+</NavLink>
+
+@if (ShowInputField && Subject.Id == ShowInputFieldForId)
+{
+    <EditForm Model="NewSubjectTitle" OnSubmit="()=> SubmitEditSubjectTitle(Subject)">
+        <h5 class="mb-1">
+            <InputText @bind-Value="@NewSubjectTitle"></InputText>
+        </h5>
+        <button type="submit">Submit</button>
+    </EditForm>
+}

@@ -15,18 +15,8 @@
         <button type="submit">Submit</button>
     </EditForm>
 }
-@if (PageState == 1)
-{
-    <CategoriesComponent @ref="CategoriesRef" CategoryChanged="UpdateCategoryState"></CategoriesComponent>
-}
-else if (PageState == 2)
-{
-    <SubjectsComponent Category="Category" SubjectPosts="OpenSubjectPosts"></SubjectsComponent>
-}
-else if (PageState == 3)
-{
-    <PostsComponent CurrentSubject="CurrentSubject"></PostsComponent>
-}
+
+<CategoriesComponent @ref="CategoriesRef" CategoryChanged="UpdateCategoryState"></CategoriesComponent>
 
 
 

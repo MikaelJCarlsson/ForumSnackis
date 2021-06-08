@@ -35,6 +35,7 @@ namespace ForumSnackis.Server.Controllers
         {
 
             var subject = await service.GetPosts(id);
+            System.Console.WriteLine($"pop id {id}");
             if (subject is not null)
                 return Ok(subject);
             else
