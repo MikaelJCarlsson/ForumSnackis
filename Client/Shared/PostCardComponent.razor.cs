@@ -26,6 +26,9 @@ namespace ForumSnackis.Client.Shared
         [Parameter]
         public EventCallback UpdatePosts { get; set; }
 
+        [CascadingParameter]
+        private Task<AuthenticationState> authenticationStateTask { get; set; }
+
         protected override async Task OnParametersSetAsync()
         {
             
@@ -120,17 +123,24 @@ namespace ForumSnackis.Client.Shared
         }
         private async Task LikePostAsync(bool liked)
         {
-            if (liked && !Liked)
+            var authState = await authenticationStateTask;
+            var user = authState.User;
+
+            if (user.Identity.IsAuthenticated)
             {
-                Liked = true;
-                Post.LikeCount++;
+
+                if (liked && !Liked)
+                {
+                    Liked = true;
+                    Post.LikeCount++;
+                }
+                else
+                {
+                    Liked = false;
+                    Post.LikeCount--;
+                }
+                await UpdatePostLikes();
             }
-            else
-            {
-                Liked = false;
-                Post.LikeCount--;
-            }
-            await UpdatePostLikes();
         }
 
         private async Task UpdatePostLikes()
