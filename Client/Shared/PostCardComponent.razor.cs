@@ -21,8 +21,8 @@ namespace ForumSnackis.Client.Shared
         private bool ShowReplyForm { get; set; }
         private bool ShowEditForm { get; set; }
         public PostDTO EditedPost { get; set; }
-
-
+        public int Likes { get; set; }
+        public bool Liked { get; set; }
         [Parameter]
         public EventCallback UpdatePosts { get; set; }
 
@@ -117,6 +117,20 @@ namespace ForumSnackis.Client.Shared
                 ShowEditForm = false;
             }
 
+        }
+        private async Task LikePostAsync(bool liked)
+        {
+            if(liked && !Liked)
+            {
+                Likes++;
+                Liked = true;
+            }
+            else
+            {
+                Liked = false;
+                Likes--;
+            }
+             
         }
         private async Task EditPost()
         {
