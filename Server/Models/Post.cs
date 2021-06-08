@@ -14,5 +14,6 @@ namespace ForumSnackis.Server.Models
         public int SubjectId { get; set; }
         public Subject Subject { get; set; }
         public Report Report { get; set; }
+        public int LikeCount { get; set; }
     }
 }

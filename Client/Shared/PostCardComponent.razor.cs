@@ -120,18 +120,29 @@ namespace ForumSnackis.Client.Shared
         }
         private async Task LikePostAsync(bool liked)
         {
-            if(liked && !Liked)
+            if (liked && !Liked)
             {
-                Likes++;
                 Liked = true;
+                Post.LikeCount++;
             }
             else
             {
                 Liked = false;
-                Likes--;
+                Post.LikeCount--;
             }
-             
+            await UpdatePostLikes();
         }
+
+        private async Task UpdatePostLikes()
+        {
+            var privateHttp = HttpFactory.CreateClient("private");
+            var result = await privateHttp.PutAsJsonAsync($"api/Post/{Post.Id}", Post);
+            if (result.IsSuccessStatusCode)
+            {
+                await UpdatePosts.InvokeAsync();
+            }
+        }
+
         private async Task EditPost()
         {
             var privateHttp = HttpFactory.CreateClient("private");

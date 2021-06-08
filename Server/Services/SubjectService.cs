@@ -74,12 +74,13 @@ namespace ForumSnackis.Server.Services
                                 PostedBy = post.PostedBy?.UserName,
                                 SubjectId = post.SubjectId,
                                 QuoteContent = post.Quote?.Content,
-                                QuoteId = post.Quote?.Id,
+                                QuoteId = post.Quote.Id,
                                 QuotePostedBy = post.Quote?.PostedBy.UserName,
                                 PostCount = post.PostedBy.Posts.Count(),
                                 AccountCreated = post.PostedBy.RegistrationDate,
-                                ImagePath = post.PostedBy?.ImagePath
-                            }) ;
+                                ImagePath = post.PostedBy?.ImagePath,
+                                LikeCount = post.LikeCount
+                            });
                     }
                     return posts;
                 }

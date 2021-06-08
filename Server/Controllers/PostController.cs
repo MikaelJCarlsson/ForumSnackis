@@ -48,7 +48,7 @@ namespace ForumSnackis.Server.Controllers
             
             int result = await service.Report(id, User);
 
-            if(result != 0)
+            if (result != 0)
             {
                 return Ok();
             }

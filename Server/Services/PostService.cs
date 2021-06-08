@@ -103,8 +103,10 @@ namespace ForumSnackis.Server.Services
                 var user = claim.Claims.First().Value;
                 if (user.Equals(query.PostedBy.Id) || claim.IsInRole("Administrators"))
                 {
-                        query.Content = post.Content;
-                        dbContext.Update(query);
+                    query.Content = post.Content;
+                    query.LikeCount = post.LikeCount;
+                    dbContext.Update(query);
+
                     return await dbContext.SaveChangesAsync();
                 }
                 return 0;
