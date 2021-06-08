@@ -36,33 +36,33 @@
                         @Post.Content
                     </div>
 
-                    <div class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3">
-                        <div class="px-4 pt-3"> <a style="color: #dc3545;" @onclick="() => LikePostAsync(true)"
-                            class="d-inline-flex align-items-center align-middle oi oi-heart" data-abc="true">
-                                <i class="fa fa-heart text-danger"></i>&nbsp; <span
-                                class="align-middle">@Post.LikeCount</span>
-                            </a> <span class="text-muted d-inline-flex align-items-center align-middle ml-4">
-                                <i class="fa fa-eye text-muted fsize-3"></i>&nbsp; <span class="align-middle">14532</span>
-                            </span> </div>
+                        <div class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3">
+                            <div class="px-4 pt-3">
+                                <a style="color: #dc3545;" @onclick="() => LikePostAsync(true)" class="d-inline-flex align-items-center align-middle oi oi-heart" data-abc="true">
+                                    <i class="fa fa-heart text-danger"></i>&nbsp; <span class="align-middle">@Post.LikeCount</span>
+                                </a>
+                                <span class="text-muted d-inline-flex align-items-center align-middle ml-4">
+                                    <i class="fa fa-eye text-muted fsize-3"></i>&nbsp; <span class="align-middle">14532</span>
+                                </span>
+                                </div>
                         <div class="btn-group btn-group-sm pt-3 px-3">
                                 <AuthorizeView>
                                     <Authorized>
-                                        <button type="button" class="btn btn-primary"
-                                        @onclick="() => ToggleReplyForm(true)"><i
-                                            class="oi oi-comment-square"></i></button>
-                                        <button type="button" class="btn btn-warning" @onclick="() => ReportPost()"
-                                        style="color:white"><i class="oi oi-flag"></i></button>
+                                        <button type="button" class="btn btn-primary" @onclick="() => ToggleReplyForm(true)">
+                                            <i class="oi oi-comment-square"></i>
+                                            </button>
+                                        <button type="button" class="btn btn-warning" @onclick="() => ReportPost()" style="color:white">
+                                            <i class="oi oi-flag"></i>
+                                        </button>
                                         @if (context.User.Claims.First(x => x.Type == "sub").Value == Post.UserId)
                                     {
-                                        <button type="button" class="btn btn-success"
-                                        @onclick="() => ToggleEditForm(true)"><i class="oi oi-pencil"></i></button>
+                                        <button type="button" class="btn btn-success" @onclick="() => ToggleEditForm(true)"><i class="oi oi-pencil"></i></button>
                                     }
                                 </Authorized>
                             </AuthorizeView>
                             <AuthorizeView Roles="Administrators">
                                 <Authorized>
-                                    <button type="button" class="btn btn-danger" @onclick="() => DeletePost()"><i
-                                            class="oi oi-x"></i></button>
+                                    <button type="button" class="btn btn-danger" @onclick="() => DeletePost()"><i class="oi oi-x"></i></button>
                                 </Authorized>
                             </AuthorizeView>
 
@@ -72,8 +72,7 @@
                     {
                         <EditForm Model="Reply" OnSubmit="CreateReply">
                             <div class="form-floating m-2">
-                                <InputTextArea class="form-control" placeholder="Leave a reply here" id="floatingTextarea2"
-                            style="height: 100px" @bind-Value="Reply.Content"></InputTextArea>
+                                <InputTextArea class="form-control" placeholder="Leave a reply here" id="floatingTextarea2" style="height: 100px" @bind-Value="Reply.Content"></InputTextArea>
                                 <button class="btn btn-primary btn-sm" type="submit">Submit</button>
                             </div>
                         </EditForm>
@@ -82,8 +81,7 @@
                     {
                         <EditForm Model="EditedPost" OnSubmit="EditPost">
                             <div class="form-floating m-2">
-                                <InputTextArea class="form-control" placeholder="Edit your post" style="height: 100px"
-                            @bind-Value="EditedPost.Content"></InputTextArea>
+                                <InputTextArea class="form-control" placeholder="Edit your post" style="height: 100px" @bind-Value="EditedPost.Content"></InputTextArea>
                                 <button class="btn btn-primary btn-sm" type="submit">Submit</button>
                             </div>
                         </EditForm>

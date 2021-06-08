@@ -21,10 +21,13 @@ namespace ForumSnackis.Client.Shared
         private bool ShowReplyForm { get; set; }
         private bool ShowEditForm { get; set; }
         public PostDTO EditedPost { get; set; }
-        public int Likes { get; set; }
         public bool Liked { get; set; }
+        public bool Disliked { get; set; }
         [Parameter]
         public EventCallback UpdatePosts { get; set; }
+
+        [CascadingParameter]
+        private Task<AuthenticationState> authenticationStateTask { get; set; }
 
         protected override async Task OnParametersSetAsync()
         {
@@ -120,19 +123,46 @@ namespace ForumSnackis.Client.Shared
         }
         private async Task LikePostAsync(bool liked)
         {
-            if (liked && !Liked)
-            {
-                Liked = true;
-                Post.LikeCount++;
-            }
-            else
-            {
-                Liked = false;
-                Post.LikeCount--;
-            }
-            await UpdatePostLikes();
-        }
+            var authState = await authenticationStateTask;
+            var user = authState.User;
 
+            if (user.Identity.IsAuthenticated)
+            {
+
+                if (liked && !Liked)
+                {
+                    Liked = true;
+                    Post.LikeCount++;
+                }
+                else
+                {
+                    Liked = false;
+                    Post.LikeCount--;
+                }
+                await UpdatePostLikes();
+            }
+        }
+        private async Task DislikePostAsync(bool liked)
+        {
+            var authState = await authenticationStateTask;
+            var user = authState.User;
+
+            if (user.Identity.IsAuthenticated)
+            {
+
+                if (liked && !Disliked)
+                {
+                    Disliked = true;
+                    Post.DislikeCount++;
+                }
+                else
+                {
+                    Disliked = false;
+                    Post.DislikeCount--;
+                }
+                await UpdatePostLikes();
+            }
+        }
         private async Task UpdatePostLikes()
         {
             var privateHttp = HttpFactory.CreateClient("private");

@@ -58,7 +58,7 @@ namespace ForumSnackis.Server.Services
                                                       .Include(x => x.Posts)
                                                       .ThenInclude(p => p.Quote)
                                                       .FirstOrDefaultAsync();
-                
+
                 List<PostDTO> posts = new();
                 if (subject is not null)
                 {
@@ -74,12 +74,14 @@ namespace ForumSnackis.Server.Services
                                 PostedBy = post.PostedBy?.UserName,
                                 SubjectId = post.SubjectId,
                                 QuoteContent = post.Quote?.Content,
-                                QuoteId = post.Quote.Id,
+                                QuoteId = post.Quote?.Id,
                                 QuotePostedBy = post.Quote?.PostedBy.UserName,
                                 PostCount = post.PostedBy.Posts.Count(),
                                 AccountCreated = post.PostedBy.RegistrationDate,
                                 ImagePath = post.PostedBy?.ImagePath,
-                                LikeCount = post.LikeCount
+                                LikeCount = post.LikeCount,
+                                DislikeCount = post.DislikeCount
+                                
                             });
                     }
                     return posts;
@@ -125,7 +127,7 @@ namespace ForumSnackis.Server.Services
                 quotedPost = await dbContext.Posts.FindAsync(post.QuoteId);
             else
                 quotedPost = null;
-            
+
 
             if(subject != null)
             {

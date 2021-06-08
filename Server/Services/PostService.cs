@@ -105,6 +105,7 @@ namespace ForumSnackis.Server.Services
                 {
                     query.Content = post.Content;
                     query.LikeCount = post.LikeCount;
+                    query.DislikeCount = post.DislikeCount;
                     dbContext.Update(query);
 
                     return await dbContext.SaveChangesAsync();
