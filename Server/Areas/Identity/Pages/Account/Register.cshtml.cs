@@ -21,7 +21,7 @@ namespace RoleEnabledWebAssembly.Server.Areas.Identity.Pages
         // This is the user that will be automatically 
         // made an Administrator
         // *************************************************
-        const string ADMINISTRATOR_USERNAME = "Admin@email";
+        const string ADMINISTRATOR_USERNAME = "AdminVanBuuren";
         const string ADMINISTRATION_ROLE = "Administrators";
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -40,7 +40,12 @@ namespace RoleEnabledWebAssembly.Server.Areas.Identity.Pages
         public string ReturnUrl { get; set; }
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
         public class InputModel
-        {
+        {   [Required]
+            [Display(Name = "Username")]
+            [StringLength(20, ErrorMessage =
+                "The {0} must be at least {2} and at max {1} characters long.",
+                MinimumLength = 2)]
+            public string UserName { get; set; }
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
@@ -76,8 +81,9 @@ namespace RoleEnabledWebAssembly.Server.Areas.Identity.Pages
                 var user =
                     new ApplicationUser
                     {
-                        UserName = Input.Email,
-                        Email = Input.Email
+                        UserName = Input.UserName,
+                        Email = Input.Email,
+                        ImagePath = "https://cdn.frankerfacez.com/emoticon/447568/4"
                     };
                 var result =
                     await _userManager.CreateAsync(user, Input.Password);

@@ -1,26 +1,41 @@
-﻿@page "/Profile"
+﻿@page "/Profile/{UserName}"
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@if(UserName != null)
+{
+
 
 <AuthorizeView>
     <Authorized>
-        <h1>@context.User.Identity.Name</h1>
+        @if (UserData != null)
+        {
+        <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+                              max-width: 300px;
+                              margin: auto;
+                              text-align: center;">
+            <img src="@UserData.ImagePath" alt="" style="width:100%" />
+            <h3>@UserData.UserName</h3>
+            <p class="font-weight-light">Admin, Big Boss, sucks at FE</p>           
+            @if (context.User.Identity.Name == UserName)
+            {
+                <div class="input-group mt-2" >
 
-        <div class="input-group">
-            <div class="custom-file">
-                <InputFile class="custom-file-input" OnChange="OnChange" accept="image/png, image/jpeg, image/gif" id="inputFile" />
-                <label class="custom-file-label" for="inputFile">Choose file</label>
-            </div>
-            <div class="input-group-append">
-                <button class="btn btn-success" @onclick="Upload" disabled="@isDisabled">Upload</button>
-            </div>
+                    <div class="custom-file text-sm-left">
+                        <InputFile class="custom-file-input" OnChange="OnChange" accept="image/png, image/jpeg, image/gif" id="inputFile" />
+                        <label class="custom-file-label" for="inputFile">Upload Image</label>
+                    </div>
+                    <div class="input-group-append">
+                        <button class="btn btn-success" @onclick="Upload" disabled="@isDisabled">Upload</button>
+                    </div>
+                </div>
+
+            }
         </div>
+        }
     </Authorized>
 </AuthorizeView>
 
 
 
-@foreach (var item in filesBase64)
-{
-    <img src="data:@item.contentType;base64,@item.base64data" />
+
 }

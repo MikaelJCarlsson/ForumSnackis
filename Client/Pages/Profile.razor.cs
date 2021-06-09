@@ -1,9 +1,9 @@
 ﻿using ForumSnackis.Shared;
+using ForumSnackis.Shared.DTO;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -15,9 +15,20 @@ namespace ForumSnackis.Client.Pages
 		List<ImageFile> filesBase64 = new List<ImageFile>();
 		string message = "InputFile";
 		bool isDisabled = false;
-
-		[Inject]
+		[Parameter]
+        public string UserName { get; set; }
+        public UserDTO UserData { get; set; }
+        [Inject]
 		public IHttpClientFactory HttpFactory { get; set; }
+		protected override async Task OnInitializedAsync()	
+		{
+			var httpclient = HttpFactory.CreateClient("private");
+			var response = await httpclient.GetAsync($"api/User/{UserName}");
+			if(response.IsSuccessStatusCode)
+            {
+				UserData = await response.Content.ReadFromJsonAsync<UserDTO>();
+            }
+        }
 		async Task OnChange(InputFileChangeEventArgs e)
 		{
 			var files = e.GetMultipleFiles();
