@@ -56,10 +56,11 @@ namespace ForumSnackis.Server.Services
             }
 
         }
-        public async Task<int> CreateAsync(string title)
+        public async Task<int> CreateAsync(CategoryDTO category)
         {
             Category fc = new Category();
-            fc.Title = title;
+            fc.Title = category.Title;
+            fc.CategoriesId = category.ForumCategoryId;
             dbContext.Add(fc);
             return await dbContext.SaveChangesAsync();
         }

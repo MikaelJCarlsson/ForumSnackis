@@ -1,34 +1,31 @@
-﻿<div class="list-group">
-    @if (categories is not null)
-    {
-        @foreach (var cat in categories)
-        {
-            <AuthorizeView Roles="Administrators">
-                <Authorized>
-                    <div class="btn-group btn-group-sm col col-1">
-                        <button class="btn btn-primary oi oi-cog" @onclick="() => EditCategoryTitle(cat.Id)"></button>
-                        <button class="btn btn-danger oi oi-circle-x" @onclick="() => DeleteCategory(cat)"></button>
-                    </div>
-                </Authorized>
-            </AuthorizeView>
+﻿<AuthorizeView Roles="Administrators">
+    <Authorized>
+        <div class="btn-group btn-group-sm col col-1">
+            <button class="btn btn-primary oi oi-cog" @onclick="() => EditCategoryTitle(Category.Id)"></button>
+            <button class="btn btn-danger oi oi-circle-x" @onclick="() => DeleteCategory(Category)"></button>
+        </div>
+    </Authorized>
+</AuthorizeView>
 
-            <NavLink href="@($"Topic/{cat.Id}")" class="list-group-item list-group-item-action bg-light" aria-current="false">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">@cat.Title</h5>
-                    <small>Last post 3 days ago</small>
-                </div>
-                <p class="mb-1">Some placeholder content in a paragraph.</p>
-                <small>And some small print.</small>
-            </NavLink>
-            @if (ShowInputField && cat.Id == ShowInputFieldForId)
-            {
-                <EditForm Model="NewCategoryTitle" OnSubmit="()=> EditCategory(cat)">
-                    <h5 class="mb-1">
-                        <InputText @bind-Value="@NewCategoryTitle"></InputText>
-                    </h5>
-                    <button type="submit">Submit</button>
-                </EditForm>
-            }
+<NavLink href="@($"Topic/{Category.Id}")" class="list-group-item list-group-item-action bg-light" aria-current="false">
+    <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1">@Category.Title</h5>
+        <small>Last post 3 days ago</small>
+    </div>
+    <p class="mb-1">Some placeholder content in a paragraph.</p>
+    <small>And some small print.</small>
+</NavLink>
+
+<AuthorizeView Context="AuthContext" Roles="Administrators">
+    <Authorized>
+        @if (ShowInputField)
+        {
+        <EditForm Model="NewCategoryTitle" OnSubmit="()=> EditCategory(Category)">
+            <h5 class="mb-1">
+                <InputText @bind-Value="@NewCategoryTitle"></InputText>
+            </h5>
+            <button type="submit">Submit</button>
+        </EditForm>
         }
-    }
-</div>
+    </Authorized>
+</AuthorizeView>

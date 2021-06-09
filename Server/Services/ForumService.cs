@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ForumSnackis.Server.Data;
-using Shared.DTO;
+using ForumSnackis.Server.Models;
+using ForumSnackis.Shared.DTO;
+using Microsoft.EntityFrameworkCore;
 
-namespace Server.Services
+namespace ForumSnackis.Server.Services
 {
     public class ForumService
     {
@@ -15,9 +18,35 @@ namespace Server.Services
             this.dbContext = dbContext;
         }
 
-        internal Task CreateAsync(ForumDTO forumCategory)
+        internal async Task<int> CreateAsync(ForumDTO forumCategory)
         {
-            throw new NotImplementedException();
+            // var count = dbContext.Forums.Where(forum => forum.Title == forumCategory.Title).Count();
+            // if (count == 0)
+            // {
+                dbContext.Forums.Add(new()
+                {
+                    Title = forumCategory.Title,
+                });
+                return await dbContext.SaveChangesAsync();
+            // }
+        }
+
+        internal async Task<ForumDTO> GetAsync(int id)
+        {
+            try
+            {
+                var tmp = await dbContext.Forums.Where(x => x.Id == id)
+                    .Include(x => x.Categories)
+                    .FirstOrDefaultAsync();
+
+                if (tmp == default)
+                    return null;
+                return MapForumToDTO(tmp);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         internal Task UpdateAsync(ForumDTO forumCategory)
@@ -30,9 +59,45 @@ namespace Server.Services
             throw new NotImplementedException();
         }
 
-        internal Task<List<ForumDTO>> GetAsync()
+        internal async Task<List<ForumDTO>> GetAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var listOfForum = await dbContext.Forums.Include(c => c.Categories).ToListAsync();
+                List<ForumDTO> listOfForumDTO = new();
+
+                foreach (var forum in listOfForum)
+                    listOfForumDTO.Add(MapForumToDTO(forum));
+
+                return listOfForumDTO;
+            }
+            catch (ArgumentNullException)
+            {
+                throw;
+            }
+        }
+
+        private static ForumDTO MapForumToDTO(Forum forum)
+        {
+            ForumDTO forumDTO = new()
+            {
+                Id = forum.Id,
+                Title = forum.Title,
+                Categories = new()
+            };
+
+            foreach (var category in forum.Categories)
+            {
+                CategoryDTO categoryDTO = new()
+                {
+                    Id = category.Id,
+                    Title = category.Title,
+                    ForumCategoryId = category.CategoriesId,
+                };
+                forumDTO.Categories.Add(categoryDTO);
+            }
+
+            return forumDTO;
         }
     }
 }

@@ -6,10 +6,7 @@ using ForumSnackis.Server.Services;
 using ForumSnackis.Shared.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Server.Services;
-using Shared.DTO;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ForumSnackis.Server.Controllers
@@ -25,14 +22,33 @@ namespace ForumSnackis.Server.Controllers
         {
             this.service = service;
         }
-
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int id)
+        {
+            try
+            {
+                var forumDTO = await service.GetAsync(id);
+                if (forumDTO is null)
+                    return StatusCode(404);
+                return Ok(forumDTO);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-
-            List<ForumDTO> post = await service.GetAsync();
-            return post is not null ? Ok(post) : NotFound();
-
+            try
+            {
+                var listOfForumDTOs = await service.GetAsync();
+                return Ok(listOfForumDTOs);
+            }
+            catch (Exception)
+            {
+                return StatusCode(404);
+            }
         }
         [Authorize]
         [HttpPost]

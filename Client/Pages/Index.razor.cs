@@ -1,11 +1,7 @@
-﻿using ForumSnackis.Client.Shared;
-using ForumSnackis.Shared.DTO;
+﻿using ForumSnackis.Shared.DTO;
 using Microsoft.AspNetCore.Components;
-using Shared.DTO;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -20,12 +16,16 @@ namespace ForumSnackis.Client.Pages
             [MinLength(3)]
             public string Title { get; set; }
         }
-
+        public ForumCategoryModel NewForumCategory { get; set; } = new();
+        [Inject]
+        public IHttpClientFactory HttpFactory { get; set; }
+        public bool ShowCreateForumForm { get; set; }
+        public List<ForumDTO> ListOfForums { get; private set; }
         private async Task CreateForumCategory()
         {
             var privateHttp = HttpFactory.CreateClient("private");
 
-            var request = await privateHttp.PostAsJsonAsync("api/ForumCategory", new ForumDTO() { Title = NewForumCategory.Title });
+            var request = await privateHttp.PostAsJsonAsync("api/Forum", new ForumDTO() { Title = NewForumCategory.Title });
 
             if (request.IsSuccessStatusCode)
             {
@@ -35,41 +35,41 @@ namespace ForumSnackis.Client.Pages
 
         }
 
+        public async Task UpdateForum(ForumDTO forum)
+        {
+            await GetForumCategories();
+
+            // var publicHttp = HttpFactory.CreateClient("public");
+
+            // var request = await publicHttp.GetAsync($"api/Forum/{forum.Id}");
+
+            // if (request.IsSuccessStatusCode)
+            // {
+            //     var tmp = ListOfForums.Find(f => f.Id == forum.Id);
+            //     ListOfForums.Remove(tmp);
+            //     tmp = await request.Content.ReadFromJsonAsync<ForumDTO>();
+            //     ListOfForums.Add(tmp);
+            // }
+
+        }
+
+        protected override async Task OnInitializedAsync()
+        {
+            if (ListOfForums is null)
+                await GetForumCategories();
+        }
         private async Task GetForumCategories()
         {
             var publicHttp = HttpFactory.CreateClient("public");
 
-            var request = await publicHttp.GetAsync("api/ForumCategory");
+            var request = await publicHttp.GetAsync("api/Forum");
 
             if (request.IsSuccessStatusCode)
-                ForumCategories = await request.Content.ReadFromJsonAsync<List<ForumDTO>>();
+                ListOfForums = await request.Content.ReadFromJsonAsync<List<ForumDTO>>();
         }
 
-        public ForumCategoryModel NewForumCategory { get; set; } = new();
-        private CategoriesComponent CategoriesRef;
-        private CategoryDTO NewCategory = new();
-        public int PageState { get; set; } = 1;
-        [Parameter]
-        public CategoryDTO Category { get; set; }
-        [Parameter]
-        public SubjectsDTO CurrentSubject { get; set; }
-        [Inject]
-        public IHttpClientFactory HttpFactory { get; set; }
-
-        [Parameter]
-        public int CurrentPageStateChanged { get; set; }
-        public bool CategoryForm { get; set; }
-        public List<ForumDTO> ForumCategories { get; private set; }
-
-        private void CreateCategory()
-        {
-            if (NewCategory is not null)
-            {
-                CategoryDTO category = new();
-                category.Title = NewCategory.Title;
-                CategoriesRef.CreateCategory(category.Title);
-            }
-        }
+        private void ToggleCreateForumForm() =>
+            ShowCreateForumForm = ShowCreateForumForm ? false : true;
     }
 
 }

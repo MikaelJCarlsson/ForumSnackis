@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using ForumSnackis.Shared.DTO;
 
-namespace Shared.DTO
+namespace ForumSnackis.Shared.DTO
 {
     public class ForumDTO
     {
