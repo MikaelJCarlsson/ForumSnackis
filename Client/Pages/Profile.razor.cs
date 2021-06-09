@@ -20,7 +20,7 @@ namespace ForumSnackis.Client.Pages
         public UserDTO UserData { get; set; }
         [Inject]
 		public IHttpClientFactory HttpFactory { get; set; }
-		protected override async Task OnInitializedAsync()	
+		protected override async Task OnParametersSetAsync()	
 		{
 			var httpclient = HttpFactory.CreateClient("private");
 			var response = await httpclient.GetAsync($"api/User/{UserName}");
@@ -58,6 +58,7 @@ namespace ForumSnackis.Client.Pages
 					filesBase64.Clear();
 				}
 			}
+			await OnParametersSetAsync();
 		}
 	}
 }
