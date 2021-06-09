@@ -1,28 +1,28 @@
 ﻿@if (Post is not null)
 {
     <div class="container-fluid mt-100">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card mb-4">
-                <div class="card-header">
-                    <div class="media flex-wrap w-100 align-items-center">
-                        <img src="@Post.ImagePath" class="ui-w-40 rounded-circle d-none d-lg-block" alt="">
-                        <div class="media-body ml-3">
-                            <a href="javascript:void(0)" data-abc="true">
-                                @Post.PostedBy
-                            </a>
-                            <div class="text-muted small">
-                                @Post.PostDate.ToShortDateString()
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <div class="media flex-wrap w-100 align-items-center">
+                            <img src="@Post.ImagePath" class="ui-w-40 rounded-circle d-none d-lg-block" alt="">
+                            <div class="media-body ml-3">
+                                <a href="javascript:void(0)" data-abc="true">
+                                    @Post.PostedBy
+                                </a>
+                                <div class="text-muted small">
+                                    @Post.PostDate.ToShortDateString()
+                                </div>
+                            </div>
+                            <div class="text-muted small ml-3">
+                                <div>Member since <strong>@Post.AccountCreated.ToShortDateString()</strong></div>
+                                <div><strong>@Post.PostCount</strong> posts</div>
                             </div>
                         </div>
-                        <div class="text-muted small ml-3">
-                            <div>Member since <strong>@Post.AccountCreated.ToShortDateString()</strong></div>
-                            <div><strong>@Post.PostCount</strong> posts</div>
-                        </div>
                     </div>
-                </div>
-                <div class="card-body">
-                    @if (Post.QuoteContent != null && Post.QuotePostedBy != null)
+                    <div class="card-body">
+                        @if (Post.QuoteContent != null && Post.QuotePostedBy != null)
                         {
                             <figure class="border p-2">
                                 <blockquote class="blockquote">
@@ -36,25 +36,21 @@
                         @Post.Content
                     </div>
 
-                        <div class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3">
-                            <div class="px-4 pt-3">
-                                <a style="color: #dc3545;" @onclick="() => LikePostAsync(true)" class="d-inline-flex align-items-center align-middle oi oi-heart" data-abc="true">
-                                    <i class="fa fa-heart text-danger"></i>&nbsp; <span class="align-middle">@Post.LikeCount</span>
-                                </a>
-                                <span class="text-muted d-inline-flex align-items-center align-middle ml-4">
-                                    <i class="fa fa-eye text-muted fsize-3"></i>&nbsp; <span class="align-middle">14532</span>
-                                </span>
-                                </div>
+                    <div class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3">
+                        <div class="px-4 pt-3">
+                            <a style="color: dodgerblue;" @onclick="() => LikePostAsync(true)" class="d-inline-flex align-items-center align-middle oi oi-thumb-up" data-abc="true">
+                                <i class="fa fa-heart text-danger"></i>&nbsp; <span class="align-middle">@Post.LikeCount</span>
+                            </a>
+                            <a style="color: firebrick;" @onclick="() => DislikePostAsync(true)" class="d-inline-flex align-items-center align-middle oi oi-thumb-down" data-abc="true">
+                                <i class="fa fa-heart text-danger"></i>&nbsp; <span class="align-middle">@Post.DislikeCount</span>
+                            </a>
+                        </div>
                         <div class="btn-group btn-group-sm pt-3 px-3">
-                                <AuthorizeView>
-                                    <Authorized>
-                                        <button type="button" class="btn btn-primary" @onclick="() => ToggleReplyForm(true)">
-                                            <i class="oi oi-comment-square"></i>
-                                            </button>
-                                        <button type="button" class="btn btn-warning" @onclick="() => ReportPost()" style="color:white">
-                                            <i class="oi oi-flag"></i>
-                                        </button>
-                                        @if (context.User.Claims.First(x => x.Type == "sub").Value == Post.UserId)
+                            <AuthorizeView>
+                                <Authorized>
+                                    <button type="button" class="btn btn-primary" @onclick="() => ToggleReplyForm(true)"><i class="oi oi-comment-square"></i></button>
+                                    <button type="button" class="btn btn-warning" @onclick="() => ReportPost()" style="color:white"><i class="oi oi-flag"></i></button>
+                                    @if (context.User.Claims.First(x => x.Type == "sub").Value == Post.UserId)
                                     {
                                         <button type="button" class="btn btn-success" @onclick="() => ToggleEditForm(true)"><i class="oi oi-pencil"></i></button>
                                     }
@@ -65,10 +61,9 @@
                                     <button type="button" class="btn btn-danger" @onclick="() => DeletePost()"><i class="oi oi-x"></i></button>
                                 </Authorized>
                             </AuthorizeView>
-
+                        </div>
                     </div>
-                </div>
-                @if (ShowReplyForm)
+                    @if (ShowReplyForm)
                     {
                         <EditForm Model="Reply" OnSubmit="CreateReply">
                             <div class="form-floating m-2">
