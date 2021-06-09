@@ -1,6 +1,6 @@
 ﻿
 @page "/"
-<button class="btn btn-success oi oi-home" @onclick="NavigateHome"></button>
+@* <button class="btn btn-success oi oi-home" @onclick="NavigateHome"></button> *@
 <AuthorizeView Roles="Administrators">
     <Authorized>
         <button class="btn btn-primary" @onclick="() => CategoryForm = true">Create new Category</button>
@@ -16,7 +16,7 @@
     </EditForm>
 }
 
-<CategoriesComponent @ref="CategoriesRef" CategoryChanged="UpdateCategoryState"></CategoriesComponent>
+@* <CategoriesComponent @ref="CategoriesRef" CategoryChanged="UpdateCategoryState"></CategoriesComponent> *@
 
 
 
