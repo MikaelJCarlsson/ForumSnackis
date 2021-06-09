@@ -34,7 +34,7 @@ namespace ForumSnackis.Client.Pages
         protected override async Task OnInitializedAsync()
         {
             Subject ??= await GetSubject();
-            Subject.Posts ??= await GetPosts();
+            await UpdatePosts();
         }
 
         private bool CreatePublicHttpClient()
@@ -59,9 +59,6 @@ namespace ForumSnackis.Client.Pages
 
             return !(privateHttp is null);
         }
-
-        protected override async Task OnParametersSetAsync() =>
-            Subject.Posts ??= await GetPosts();
         private async Task<List<PostDTO>> GetPosts()
         {
             if (publicHttp is null)
@@ -101,7 +98,7 @@ namespace ForumSnackis.Client.Pages
                 if (request.IsSuccessStatusCode)
                 {
                     NewPost.Content = "";
-                    await GetPosts();
+                    await UpdatePosts();
                 }
             }
         }

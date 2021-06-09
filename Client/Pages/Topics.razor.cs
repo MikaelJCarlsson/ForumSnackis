@@ -52,13 +52,13 @@ namespace ForumSnackis.Client.Pages
                 if (CategoryId > 0)
                 {
                     privateHttp = HttpFactory.CreateClient("private");
-                    var result = await privateHttp.PostAsJsonAsync($"api/Subject/", NewSubject);
+                    var result = await privateHttp.PostAsJsonAsync("api/Subject/", NewSubject);
 
                     if (result.IsSuccessStatusCode)
                     {
                         var publicHttp = HttpFactory.CreateClient("public");
 
-                        var request = await publicHttp.GetAsync("api/Category/Subjects/{Category.Id}");
+                        var request = await publicHttp.GetAsync($"api/Category/Subjects/{Category.Id}");
                         Category = await request.Content.ReadFromJsonAsync<CategoryDTO>();
                     }
                 }
