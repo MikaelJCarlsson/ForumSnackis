@@ -30,10 +30,11 @@ namespace ForumSnackis.Server.Services
             var buf = Convert.FromBase64String(file.base64data);
             var relativePath = "\\Images\\" + Guid.NewGuid().ToString("N") + "-" + file.fileName;
 
-            if (user.ImagePath is null)
+            if (user.ImagePath == "https://cdn.frankerfacez.com/emoticon/447568/4")
             {
                 await File.WriteAllBytesAsync(env.ContentRootPath.Replace("Server", "Client/wwwroot") + relativePath, buf);
                 user.ImagePath = relativePath;
+                dbContext.Update(user);
                 return await dbContext.SaveChangesAsync();
             }
             else
@@ -41,6 +42,7 @@ namespace ForumSnackis.Server.Services
                 File.Delete(env.ContentRootPath + user.ImagePath);
                 user.ImagePath = relativePath;
                 await File.WriteAllBytesAsync(env.ContentRootPath.Replace("Server", "Client/wwwroot") + relativePath, buf);
+                dbContext.Update(user);
                 return await dbContext.SaveChangesAsync();
             }
         }
