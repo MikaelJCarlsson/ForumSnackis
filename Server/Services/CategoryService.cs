@@ -20,7 +20,7 @@ namespace ForumSnackis.Server.Services
 
         public async Task<List<CategoryDTO>> GetAsync()
         {
-            var categories = await dbContext.ForumCategories.Select(x => new { x.Id, x.Title }).ToListAsync();
+            var categories = await dbContext.Categories.Select(x => new { x.Id, x.Title }).ToListAsync();
             var listOfCategories = new List<CategoryDTO>();
             foreach (var c in categories)
             {
@@ -37,7 +37,7 @@ namespace ForumSnackis.Server.Services
         {
             try
             {
-                var result = await dbContext.ForumCategories.Include(x => x.Subjects).Where(x => x.Id == id)
+                var result = await dbContext.Categories.Include(x => x.Subjects).Where(x => x.Id == id)
                     .Select(x => new CategoryDTO
                     {
                         Id = x.Id,
@@ -58,7 +58,7 @@ namespace ForumSnackis.Server.Services
         }
         public async Task<int> CreateAsync(string title)
         {
-            ForumCategory fc = new ForumCategory();
+            Category fc = new Category();
             fc.Title = title;
             dbContext.Add(fc);
             return await dbContext.SaveChangesAsync();
@@ -68,7 +68,7 @@ namespace ForumSnackis.Server.Services
         {
             try
             {
-                ForumCategory category = await dbContext.ForumCategories.Include(x => x.Subjects)
+                Category category = await dbContext.Categories.Include(x => x.Subjects)
                     .ThenInclude(x => x.CreatedBy)
                     .Include(x => x.Subjects)
                     .ThenInclude(x => x.Posts)
@@ -102,7 +102,7 @@ namespace ForumSnackis.Server.Services
         {
             try
             {
-                var category = await dbContext.ForumCategories.Include(x => x.Subjects).Where(x => x.Id == id).FirstOrDefaultAsync();
+                var category = await dbContext.Categories.Include(x => x.Subjects).Where(x => x.Id == id).FirstOrDefaultAsync();
                 if (category is null)
                     return 0;
 
@@ -122,7 +122,7 @@ namespace ForumSnackis.Server.Services
 
         public async Task<int> DeleteAsync(int id)
         {
-            var category = await dbContext.ForumCategories.FindAsync(id);
+            var category = await dbContext.Categories.FindAsync(id);
             if(category is null)
             {
                 return 0;

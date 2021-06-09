@@ -6,8 +6,10 @@ using ForumSnackis.Server.Services;
 using ForumSnackis.Shared.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Server.Services;
 using Shared.DTO;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ForumSnackis.Server.Controllers
@@ -28,7 +30,7 @@ namespace ForumSnackis.Server.Controllers
         public async Task<IActionResult> Get()
         {
 
-            var post = await service.GetAsync();
+            List<ForumDTO> post = await service.GetAsync();
             return post is not null ? Ok(post) : NotFound();
 
         }
