@@ -24,5 +24,6 @@ namespace ForumSnackis.Server.Data
         public DbSet<Report> Reports { get; set; }
         public DbSet<ChatRoom> ChatRooms { get; set; }
         public DbSet<ChatMessage> ChatMessages { get; set; }
+        public DbSet<Categories> Categories { get; set; }
     }
 }

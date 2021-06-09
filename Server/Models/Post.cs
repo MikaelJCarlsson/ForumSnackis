@@ -16,6 +16,7 @@ namespace ForumSnackis.Server.Models
         public Report Report { get; set; }
         public int LikeCount { get; set; }
         public int DislikeCount { get; set; }
+        public string ImagePath { get; set; }
 
     }
 }

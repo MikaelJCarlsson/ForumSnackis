@@ -1,6 +1,8 @@
-﻿using ForumSnackis.Shared.DTO;
+﻿using ForumSnackis.Shared;
+using ForumSnackis.Shared.DTO;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Forms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +15,8 @@ namespace ForumSnackis.Client.Shared
 {
     public partial class PostCardComponent : ComponentBase
     {
+        List<ImageFile> filesBase64 = new List<ImageFile>();
+        bool isDisabled = false;
         [Parameter]
         public PostDTO Post { get; set; }
         [Inject]
@@ -98,7 +102,7 @@ namespace ForumSnackis.Client.Shared
                                     }
                                 }*/
                 var result = await privateHttp.PostAsJsonAsync($"api/Subject/Posts/", Reply);
-
+                await Upload();
                 if (result.IsSuccessStatusCode)
                 {
                     await UpdatePosts.InvokeAsync();
@@ -172,7 +176,35 @@ namespace ForumSnackis.Client.Shared
                 await UpdatePosts.InvokeAsync();
             }
         }
+        async Task OnChange(InputFileChangeEventArgs e)
+        {
+            var files = e.GetMultipleFiles();
+            foreach (var file in files)
+            {
+                var resizedFile = await file.RequestImageFileAsync(file.ContentType, 128, 128); // resize the image file
+                var buf = new byte[resizedFile.Size];
+                using (var stream = resizedFile.OpenReadStream())
+                {
+                    await stream.ReadAsync(buf);
+                }
+                filesBase64.Add(new ImageFile { base64data = Convert.ToBase64String(buf), contentType = file.ContentType, fileName = file.Name });
+            }
+            
+        }
 
+        async Task Upload()
+        {
+            isDisabled = true;
+            var http = HttpFactory.CreateClient("private");
+            using (var msg = await http.PostAsJsonAsync($"/api/upload/{Post.Id}", filesBase64, System.Threading.CancellationToken.None))
+            {
+                isDisabled = false;
+                if (msg.IsSuccessStatusCode)
+                {
+                    filesBase64.Clear();
+                }
+            }      
+        }
         private async Task EditPost()
         {
             var privateHttp = HttpFactory.CreateClient("private");

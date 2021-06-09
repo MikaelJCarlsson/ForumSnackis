@@ -33,6 +33,10 @@
                                 </figcaption>
                             </figure>
                         }
+                        @if (Post.PostedImagePath != null)
+                        {
+                            <img src="@Post.PostedImagePath" class="ui-w-40 rounded-circle d-none d-lg-block" alt="" width="64" height="64">
+                        }
                         @Post.Content
                     </div>
 
@@ -67,6 +71,8 @@
                     {
                         <EditForm Model="Reply" OnSubmit="CreateReply">
                             <div class="form-floating m-2">
+                                <InputFile class="custom-file-input" OnChange="OnChange" accept="image/png, image/jpeg, image/gif" id="inputFile" />
+                                <label class="custom-file-label" for="inputFile">Upload Image</label>
                                 <InputTextArea class="form-control" placeholder="Leave a reply here" id="floatingTextarea2" style="height: 100px" @bind-Value="Reply.Content"></InputTextArea>
                                 <button class="btn btn-primary btn-sm" type="submit">Submit</button>
                             </div>
@@ -76,6 +82,8 @@
                     {
                         <EditForm Model="EditedPost" OnSubmit="EditPost">
                             <div class="form-floating m-2">
+                                <InputFile class="custom-file-input" OnChange="OnChange" accept="image/png, image/jpeg, image/gif" id="inputFile" />
+                                <label class="custom-file-label" for="inputFile">Upload Image</label>
                                 <InputTextArea class="form-control" placeholder="Edit your post" style="height: 100px" @bind-Value="EditedPost.Content"></InputTextArea>
                                 <button class="btn btn-primary btn-sm" type="submit">Submit</button>
                             </div>

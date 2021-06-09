@@ -18,5 +18,6 @@ namespace ForumSnackis.Shared.DTO
         public string? QuotePostedBy { get; set; }
         public int LikeCount { get; set; }
         public int DislikeCount { get; set; }
+        public string? PostedImagePath { get; set; }
     }
 }

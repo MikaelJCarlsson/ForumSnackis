@@ -31,8 +31,14 @@ public class UploadController : ControllerBase
 	{
 		await service.UploadFileAsync(files, User);
 	}
+	[HttpPost("{id}")]
+	[Authorize]
+	public async Task PostImage([FromBody] ImageFile[] files, int id)
+	{
+		await service.UploadImageAsync(files, id);
+	}
 
-    [HttpGet("{id}")]
+	[HttpGet("{id}")]
     public async Task Get(string id)
     {
         var imageResult = await service.GetImage(id);

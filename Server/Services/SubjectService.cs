@@ -80,8 +80,8 @@ namespace ForumSnackis.Server.Services
                                 AccountCreated = post.PostedBy.RegistrationDate,
                                 ImagePath = post.PostedBy?.ImagePath,
                                 LikeCount = post.LikeCount,
-                                DislikeCount = post.DislikeCount
-                                
+                                DislikeCount = post.DislikeCount,
+                                PostedImagePath = post?.ImagePath                             
                             });
                     }
                     return posts;

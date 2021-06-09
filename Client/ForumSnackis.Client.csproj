@@ -17,4 +17,8 @@
     <ProjectReference Include="..\Shared\ForumSnackis.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\TopicImages\" />
+  </ItemGroup>
+
 </Project>

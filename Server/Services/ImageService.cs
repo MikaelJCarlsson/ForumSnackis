@@ -46,7 +46,23 @@ namespace ForumSnackis.Server.Services
                 return await dbContext.SaveChangesAsync();
             }
         }
+        internal async Task<int> UploadImageAsync(ImageFile[] files,int postId)
+        {
+            var post = dbContext.Posts.Find(postId);
+            var file = files.FirstOrDefault();
+            if (file is null)
+                return 0;
+            var buf = Convert.FromBase64String(file.base64data);
+            var relativePath = "\\TopicImages\\" + Guid.NewGuid().ToString("N") + "-" + file.fileName;
 
+            if (post.ImagePath == null)
+            {
+                await File.WriteAllBytesAsync(env.ContentRootPath.Replace("Server", "Client/wwwroot") + relativePath, buf);
+                post.ImagePath = relativePath;
+                return await dbContext.SaveChangesAsync();
+            }
+            else return 0;
+        }
         internal async Task<string> GetImage(string id)
         {
             var user = await dbContext.Users.FindAsync(id);
