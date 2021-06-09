@@ -39,7 +39,7 @@ namespace ForumSnackis.Server.Services
             }
             else
             {
-                File.Delete(env.ContentRootPath + user.ImagePath);
+                File.Delete(env.ContentRootPath.Replace("Server", "Client/wwwroot") + user.ImagePath);
                 user.ImagePath = relativePath;
                 await File.WriteAllBytesAsync(env.ContentRootPath.Replace("Server", "Client/wwwroot") + relativePath, buf);
                 dbContext.Update(user);
