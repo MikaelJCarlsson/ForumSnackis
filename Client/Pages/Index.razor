@@ -10,8 +10,8 @@
 
 @if (CategoryForm == true)
 {
-    <EditForm Model="NewCategory" OnSubmit="CreateCategory">
-        <InputText @bind-Value="NewCategory.Title" DisplayName="CategoryName"></InputText>
+    <EditForm Model="NewForumCategory" OnSubmit="CreateForumCategory">
+        <InputText @bind-Value="NewForumCategory.Title" DisplayName="CategoryName"></InputText>
         <button type="submit">Submit</button>
     </EditForm>
 }
