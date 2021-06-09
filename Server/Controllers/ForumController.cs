@@ -14,12 +14,12 @@ namespace ForumSnackis.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ForumCategoryController : ControllerBase
+    public class ForumController : ControllerBase
     {
 
-        private readonly ForumCategoryService service;
+        private readonly ForumService service;
 
-        public ForumCategoryController(ForumCategoryService service)
+        public ForumController(ForumService service)
         {
             this.service = service;
         }
@@ -34,7 +34,7 @@ namespace ForumSnackis.Server.Controllers
         }
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] ForumCategoryDTO forumCategory)
+        public async Task<IActionResult> Post([FromBody] ForumDTO forumCategory)
         {
             try
             {
@@ -50,7 +50,7 @@ namespace ForumSnackis.Server.Controllers
 
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<IActionResult> Put(int id, [FromBody] ForumCategoryDTO forumCategory)
+        public async Task<IActionResult> Put(int id, [FromBody] ForumDTO forumCategory)
         {
             try
             {

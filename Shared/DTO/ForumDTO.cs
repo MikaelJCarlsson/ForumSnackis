@@ -3,7 +3,7 @@ using ForumSnackis.Shared.DTO;
 
 namespace Shared.DTO
 {
-    public class ForumCategoryDTO
+    public class ForumDTO
     {
         public int Id { get; set; }
         public string Title { get; set; }
