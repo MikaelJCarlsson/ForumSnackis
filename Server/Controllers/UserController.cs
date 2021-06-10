@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ForumSnackis.Shared.DTO;
+using System.Security.Claims;
 
 namespace ForumSnackis.Server.Controllers
 {
@@ -17,6 +19,16 @@ namespace ForumSnackis.Server.Controllers
         public UserController(UserService service)
         {
             this.service = service;
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetUsersAsync()
+        {
+            var users = await service.GetUsersAsync(User);
+            if (users != null)
+            {
+                return Ok(users);
+            }
+            return StatusCode(500);
         }
         [HttpGet("{name}")]
         public async Task<IActionResult> GetAsync(string name)

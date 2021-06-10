@@ -1,5 +1,6 @@
 ﻿using ForumSnackis.Server.Data;
 using ForumSnackis.Server.Models;
+using ForumSnackis.Server.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -17,14 +18,20 @@ namespace ForumSnackis.Server.Controllers
     [Authorize]
     public class ChatController : Controller
     {
-        private readonly ApplicationDbContext dbContext;
+        private readonly ChatService service;
         private readonly UserManager<ApplicationUser> userManager;
-        public ChatController(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager)
+        public ChatController(ChatService service, UserManager<ApplicationUser> userManager)
         {
-            this.dbContext = dbContext;
+            this.service = service;
             this.userManager = userManager;
         }
-        [HttpGet("users")]
+        [HttpGet]
+        public async Task<IActionResult> GetChatRoomAsync()
+        {
+            var chatroom = await service.GetChatRoomByIdAsync()
+
+        }
+/*        [HttpGet("users")]
 
         public async Task<IActionResult> GetUsersAsync()
         {
@@ -37,7 +44,7 @@ namespace ForumSnackis.Server.Controllers
         {
             var user = await dbContext.Users.Where(user => user.Id == userId).FirstOrDefaultAsync();
             return Ok(user);
-        }
+        }*/
 
     }
 }
