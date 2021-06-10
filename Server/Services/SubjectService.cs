@@ -140,7 +140,8 @@ namespace ForumSnackis.Server.Services
                     Quote = quotedPost
                 };
                 subject.Posts.Add(newPost);
-                return await dbContext.SaveChangesAsync();
+                await dbContext.SaveChangesAsync();
+                return newPost.Id;
             }
             return 0;
         }

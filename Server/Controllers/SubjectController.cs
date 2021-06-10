@@ -65,7 +65,7 @@ namespace ForumSnackis.Server.Controllers
                 return StatusCode(500);
             else
                 //Created
-                return StatusCode(202);
+                return Ok(result);
         }
 
         [HttpDelete("{id}")]

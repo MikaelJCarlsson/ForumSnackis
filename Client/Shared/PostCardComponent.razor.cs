@@ -102,7 +102,7 @@ namespace ForumSnackis.Client.Shared
                                     }
                                 }*/
                 var result = await privateHttp.PostAsJsonAsync($"api/Subject/Posts/", Reply);
-                await Upload();
+                await Upload(await result.Content.ReadFromJsonAsync<int>());
                 if (result.IsSuccessStatusCode)
                 {
                     await UpdatePosts.InvokeAsync();
@@ -192,11 +192,11 @@ namespace ForumSnackis.Client.Shared
             
         }
 
-        async Task Upload()
+        async Task Upload(int id)
         {
             isDisabled = true;
             var http = HttpFactory.CreateClient("private");
-            using (var msg = await http.PostAsJsonAsync($"/api/upload/{Post.Id}", filesBase64, System.Threading.CancellationToken.None))
+            using (var msg = await http.PostAsJsonAsync($"/api/upload/{id}", filesBase64, System.Threading.CancellationToken.None))
             {
                 isDisabled = false;
                 if (msg.IsSuccessStatusCode)
