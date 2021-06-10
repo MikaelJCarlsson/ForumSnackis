@@ -10,6 +10,7 @@ namespace ForumSnackis.Shared.DTO
     {
         public int Id { get; set; }
         public string Title { get; set; }
+        public int ForumCategoryId { get; set; }
         public List<SubjectsDTO> subjects { get; set; }
     }
 

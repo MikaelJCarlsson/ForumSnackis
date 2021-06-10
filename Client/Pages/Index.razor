@@ -1,22 +1,21 @@
 ﻿
 @page "/"
-<button class="btn btn-success oi oi-home" @onclick="NavigateHome"></button>
 <AuthorizeView Roles="Administrators">
     <Authorized>
-        <button class="btn btn-primary" @onclick="() => CategoryForm = true">Create new Category</button>
+        <button class="btn btn-primary" @onclick="ToggleCreateForumForm">Create new Forum</button>
     </Authorized>
 </AuthorizeView>
 
 
-@if (CategoryForm == true)
+@if (ShowCreateForumForm)
 {
-    <EditForm Model="NewCategory" OnSubmit="CreateCategory">
-        <InputText @bind-Value="NewCategory.Title" DisplayName="CategoryName"></InputText>
+    <EditForm Model="NewForumCategory" OnSubmit="CreateForumCategory">
+        <InputText @bind-Value="NewForumCategory.Title" DisplayName="CategoryName"></InputText>
         <button type="submit">Submit</button>
     </EditForm>
 }
-
-<CategoriesComponent @ref="CategoriesRef" CategoryChanged="UpdateCategoryState"></CategoriesComponent>
-
-
-
+@if(ListOfForums is not null) {
+    <Virtualize Items="@ListOfForums" Context="forum">
+        <ForumComponent Forum="forum" UpdateForum="UpdateForum"></ForumComponent>
+    </Virtualize>
+}

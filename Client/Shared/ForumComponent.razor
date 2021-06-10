@@ -1,0 +1,31 @@
+@if (ShowCreateCategoryForm)
+{
+    <EditForm Model="NewCategory" OnSubmit="CreateCategory">
+    <h5 class="mb-1">
+        <InputText @bind-Value="@NewCategory.Title"></InputText>
+    </h5>
+    <button type="submit">Submit</button>
+</EditForm>
+}
+<div class="list-group">
+    <div>
+        <h3>
+            @Forum.Title
+        <AuthorizeView Roles="Administrators">
+            <Authorized>
+                <button class="btn btn-primary oi oi-cog btn-small" @onclick="ToggleCreateCategoryForm"></button>
+            </Authorized>
+        </AuthorizeView>
+        </h3>
+    </div>
+    @if (Forum is not null && Forum.Categories is not null)
+    {
+        <Virtualize Items="@Forum.Categories" Context="category">
+
+            <CategoriesComponent Category="category" CategoryChanged="UpdateCategory">
+
+            </CategoriesComponent>
+        </Virtualize>
+    }
+
+</div>

@@ -151,7 +151,7 @@ namespace ForumSnackis.Server.Services
         }
         public async Task<int> CreateSubject(CreateSubjectCommand csc, ClaimsPrincipal claims)
         {
-            var category = await dbContext.ForumCategories
+            var category = await dbContext.Categories
                 .Include(x => x.Subjects)
                 .Where(x => x.Id == csc.CategoryId)
                 .FirstOrDefaultAsync();

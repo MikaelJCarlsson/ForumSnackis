@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 
 namespace ForumSnackis.Server.Models
 {
-    public class Categories
+    public class Category
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public List<ForumCategory> ForumCategories { get; set; }
+        public List<Subject> Subjects { get; set; }
+        public int CategoriesId { get; set; }
+        public Forum Categories { get; set; }
     }
 }

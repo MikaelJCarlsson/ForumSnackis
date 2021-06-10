@@ -1,6 +1,7 @@
 ﻿using ForumSnackis.Server.Data;
 using ForumSnackis.Server.Models;
 using ForumSnackis.Server.Services;
+using ForumSnackis.Shared.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -60,13 +61,13 @@ namespace ForumSnackis.Server.Controllers
 
         // POST api/<CategoryController>
         [HttpPost]
-        [Authorize(Roles ="Administrators")]
-        public async Task<IActionResult> Post([FromBody] string value)
+        [Authorize(Roles = "Administrators")]
+        public async Task<IActionResult> Post([FromBody] CategoryDTO category)
         {
-          var result = await service.CreateAsync(value);
+          var result = await service.CreateAsync(category);
             if(result == 0)
                 //Internal Server Error
-                return StatusCode(500);          
+                return StatusCode(500);
             else
                 //Created
                 return StatusCode(202);
