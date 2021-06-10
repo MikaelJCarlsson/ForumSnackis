@@ -1,24 +1,26 @@
 <div class="card" style="width: 24rem;">
     <div class="card-header">name</div>
-    <div class="card-body d-inline-flex flex-column overflow-auto" style="height: 200px;">
-            <p class="d-flex justify-content-end">hej</p>
-            <p class="">hej</p>
-
-            <p class="justify-content-end bg-primary">hej</p>
-            <p class="justify-content-end">hej</p>
-            <span class="badge rounded-pill bg-primary">Primary</span>
-            <p class="d-flex justify-content-end">hej</p>
-            <p class="badge bg-primary">hej</p>
-            <p class="d-flex justify-content-end">hej</p>
-            <p class="d-flex justify-content-end">hej</p>
-            <p class="">hej</p>
-            <p class="d-flex justify-content-end">hej</p>
-            <p class="">hej</p>
-            <p class="">hej</p>
-            <p class="">hej</p>
-            <p class="">hej</p>
-
-
+    <div class="card-body d-flex flex-column overflow-auto" style="height: 200px; background-color: #d3d3d3;">
+        <div>
+            <small class="text-muted mb-0">Name</small>
+            <p>some message</p>
+        </div>
+        <div>
+            <small class="text-muted mb-0">Name - 2012-23-05:14:32</small>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Atque nobis iste eum nesciunt nisi quibusdam voluptatibus, ducimus voluptatum, distinctio maxime possimus, vel quis? Facilis a, necessitatibus odio repudiandae cum vel?</p>
+        </div>
+        <div>
+            <small class="mb-0">Name</small>
+            <p>some message</p>
+        </div>
+        <div>
+            <small class="mb-0">Name</small>
+            <p>some message</p>
+        </div>
+        <div>
+            <small class="mb-0">Name</small>
+            <p>some message</p>
+        </div>
     </div>
     <EditForm Model="MessageModel" OnSubmit="subas" class="card-footer d-flex flex-nowrap">
         <InputTextArea @bind-Value="MessageModel.Message" class="flex-fill"></InputTextArea>
