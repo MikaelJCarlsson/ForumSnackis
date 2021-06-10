@@ -1,6 +1,7 @@
 ﻿using ForumSnackis.Server.Data;
 using ForumSnackis.Server.Models;
 using ForumSnackis.Server.Services;
+using ForumSnackis.Shared.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -19,32 +20,27 @@ namespace ForumSnackis.Server.Controllers
     public class ChatController : Controller
     {
         private readonly ChatService service;
-        private readonly UserManager<ApplicationUser> userManager;
-        public ChatController(ChatService service, UserManager<ApplicationUser> userManager)
+
+        public ChatController(ChatService service)
         {
             this.service = service;
-            this.userManager = userManager;
+    
         }
-        [HttpGet]
-        public async Task<IActionResult> GetChatRoomAsync()
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetChatRoom(string id)
         {
-            var chatroom = await service.GetChatRoomByIdAsync()
-
+            var result = await service.GetChatRoomByIdAsync(id,User.Claims.FirstOrDefault(x => x.Type =="sub").Value);
         }
-/*        [HttpGet("users")]
-
-        public async Task<IActionResult> GetUsersAsync()
+        [HttpPost]
+        public async Task<IActionResult> PostChatRoom([FromBody] ChatDTO chatDTO)
         {
-            var userId = User.Claims.Where(a => a.Type == ClaimTypes.NameIdentifier).Select(a => a.Value).FirstOrDefault();
-            var allUsers = await dbContext.Users.Where(user => user.Id != userId).ToListAsync();
-            return Ok(allUsers);
+            var result = await service.CreateNewChatRoomAsync(chatDTO);
+            if(result == 1)
+            {
+                return Ok();
+            }
+            return StatusCode(500);
         }
-        [HttpGet("users/{userId}")]
-        public async Task<IActionResult> GetUserDetailsAsync(string userId)
-        {
-            var user = await dbContext.Users.Where(user => user.Id == userId).FirstOrDefaultAsync();
-            return Ok(user);
-        }*/
 
     }
 }

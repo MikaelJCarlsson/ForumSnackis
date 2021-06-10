@@ -8,7 +8,7 @@
                     {
                         @foreach (var u in Users)
                         {
-                            <p class="mb-1">@u.UserName</p>
+                            <a @onclick="() => OpenChat(u.UserId)" class="mb-1">@u.UserName</a>
                         }
                     }
 
