@@ -22,32 +22,50 @@ namespace ForumSnackis.Server.Services
         {
             try
             {
-                var user = await dbContext.Users.Include(x => x.ChatRooms).Where(x => x.Id == userId).FirstOrDefaultAsync();
-                foreach (var room in user.ChatRooms)
-                {
-                    if(room.Users.Count == 2)
-                    {
-                        var userRoom = room.Users.Where(x => x.Id == contactId);
-                        if(userRoom != null)
-                        {
-                            ChatDTO dto = new ChatDTO()
-                            {
-                                id = room.Id,
-                                Title = "bleh",
-                                Messages = new(),
-                                Users = new()
-                            };
-                            
-                            return room;
-                        }
-                    }
-                    
-                }
+                var users = await dbContext.Users.Where(u => u.Id == contactId || u.Id == userId).ToListAsync();
+                var result = await dbContext.ChatRooms.Include(u => u.Users.Where(c => c.Id == contactId).Where(u => u.Id == userId)).Where(r => r.Users.Count == 2).FirstOrDefaultAsync();
+
+                if (result is not null && result.Users.Count >= 2)
+                    return null;
+
+                ChatRoom newRoom = new() {Users = users};
+                await dbContext.AddAsync(newRoom);
+                await dbContext.SaveChangesAsync();
+                var userDTOs = CreateUserDTO(users);
+                var chatDTO = CreateChatDto(newRoom, userDTOs);
+
+                return chatDTO;
             }
             catch (Exception)
             {
                 return null;
-            }            
+            }
+        }
+
+        private static ChatDTO CreateChatDto(ChatRoom newRoom, List<UserDTO> userDTOs)
+        {
+            ChatDTO chatDTO = new()
+            {
+                id = newRoom.Id,
+                Users = userDTOs,
+                Messages = new(),
+            };
+            return chatDTO;
+        }
+
+        private static List<UserDTO> CreateUserDTO(IEnumerable<ApplicationUser> users)
+        {
+            List<UserDTO> userDTOs = new();
+            foreach (var user in users)
+            {
+                userDTOs.Add(new()
+                {
+                    UserId = user.Id,
+                    UserName = user.UserName,
+                });
+            }
+
+            return userDTOs;
         }
 
         internal async Task<int> CreateNewChatRoomAsync(ChatDTO chatRoomDTO)
@@ -56,7 +74,7 @@ namespace ForumSnackis.Server.Services
 
             var users = await dbContext.Users.ToListAsync();
 
-            ChatRoom chatRoom = new ChatRoom();
+            var chatRoom = new ChatRoom();
             chatRoom.Users = chatRoom.Users.ToList();
             chatRoom.ChatMessages = chatRoom.ChatMessages.ToList();
             chatRoom.Name = "Lé Chat";

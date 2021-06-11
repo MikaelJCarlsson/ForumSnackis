@@ -24,22 +24,19 @@ namespace ForumSnackis.Server.Controllers
         public ChatController(ChatService service)
         {
             this.service = service;
-    
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetChatRoom(string id)
         {
-            var result = await service.GetChatRoomByIdAsync(id,User.Claims.FirstOrDefault(x => x.Type =="sub").Value);
+            var result = await service.GetChatRoomByIdAsync(id,User.Claims.FirstOrDefault(x => x.Type == "sub")?.Value);
+            return Ok(result);
         }
+
         [HttpPost]
         public async Task<IActionResult> PostChatRoom([FromBody] ChatDTO chatDTO)
         {
             var result = await service.CreateNewChatRoomAsync(chatDTO);
-            if(result == 1)
-            {
-                return Ok();
-            }
-            return StatusCode(500);
+            return result == 1 ? Ok() : StatusCode(500);
         }
 
     }
