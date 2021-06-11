@@ -31,6 +31,20 @@ namespace ForumSnackis.Server.Controllers
             var result = await service.GetChatRoomByIdAsync(id,User.Claims.FirstOrDefault(x => x.Type == "sub")?.Value);
             return Ok(result);
         }
+        
+        [HttpGet("Room/{id}")]
+        public async Task<IActionResult> Get(int id)
+        {
+            var result = await service.GetChatRoom(id,User.Claims.FirstOrDefault(x => x.Type == "sub")?.Value);
+            return Ok(result);
+        }
+
+        [HttpPost("{id}")]
+        public async Task<IActionResult> Post([FromBody] MessageDTO message,int id)
+        {
+            var result = await service.CreateMessage(id, User.Claims.First(t => t.Type == "sub").Value, message);
+            return result ? Ok() : NotFound();
+        }
 
         [HttpPost]
         public async Task<IActionResult> PostChatRoom([FromBody] ChatDTO chatDTO)

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 
 namespace ForumSnackis.Server.Services
 {
@@ -22,17 +23,20 @@ namespace ForumSnackis.Server.Services
         {
             try
             {
-                var users = await dbContext.Users.Where(u => u.Id == contactId || u.Id == userId).ToListAsync();
-                var result = await dbContext.ChatRooms.Include(u => u.Users.Where(c => c.Id == contactId).Where(u => u.Id == userId)).Where(r => r.Users.Count == 2).FirstOrDefaultAsync();
-
-                if (result is not null && result.Users.Count >= 2)
-                    return null;
+                var users = await dbContext.Users.Where(u => u.Id == contactId || u.Id == userId).Include((r => r.ChatRooms)).ToListAsync();
+                var commonRooms = users.First().ChatRooms.Intersect(users.Last().ChatRooms);
+                var roomsWithTwo = commonRooms.FirstOrDefault(room => room.Users.Count == 2);
+                
+                if (roomsWithTwo != default)
+                {
+                    return await CreateChatDto(roomsWithTwo);
+                }
 
                 ChatRoom newRoom = new() {Users = users};
                 await dbContext.AddAsync(newRoom);
                 await dbContext.SaveChangesAsync();
-                var userDTOs = CreateUserDTO(users);
-                var chatDTO = CreateChatDto(newRoom, userDTOs);
+                
+                var chatDTO = await CreateChatDto(newRoom);
 
                 return chatDTO;
             }
@@ -42,15 +46,22 @@ namespace ForumSnackis.Server.Services
             }
         }
 
-        private static ChatDTO CreateChatDto(ChatRoom newRoom, List<UserDTO> userDTOs)
+        private static Task<ChatDTO> CreateChatDto(ChatRoom room)
         {
             ChatDTO chatDTO = new()
             {
-                id = newRoom.Id,
-                Users = userDTOs,
-                Messages = new(),
+                id = room.Id,
+                Users = CreateUserDTO(room.Users),
+                Messages = CreateChatMessageDTO(room),
             };
-            return chatDTO;
+            return Task.FromResult(chatDTO);
+        }
+
+        private static List<MessageDTO> CreateChatMessageDTO(ChatRoom room)
+        {
+            if(room.ChatMessages is null)
+                return new List<MessageDTO>();
+            return (List<MessageDTO>)room.ChatMessages.Select(x => new MessageDTO() { });
         }
 
         private static List<UserDTO> CreateUserDTO(IEnumerable<ApplicationUser> users)
@@ -90,6 +101,41 @@ namespace ForumSnackis.Server.Services
             }
 
             return 0;
+        }
+
+        public async Task<bool> CreateMessage(int roomId, string userId, MessageDTO messageDTO)
+        {
+            var room = await dbContext.ChatRooms.Include(m => m.ChatMessages).Include(u => u.Users).Where(r => r.Id == roomId).FirstOrDefaultAsync();
+
+            if (room.Users is null)
+                return false;
+            var user = room.Users?.Where(u => u.Id == userId).FirstOrDefault();
+
+            if (user == default)
+                return false;
+            
+            var message = new ChatMessage()
+                {
+                    Message = messageDTO.Message,
+                    PostedBy = user.UserName,
+                    ApplicationUser = user,
+                    TimeStamp = DateTime.Now,
+                    ChatRoom = room
+                };
+
+            await dbContext.AddAsync(message);
+            return await dbContext.SaveChangesAsync() > 0;
+        }
+
+        public async Task<ChatDTO> GetChatRoom(int roomId, string userId)
+        {
+            var room = await dbContext.ChatRooms.Include(u => u.Users.Where(u => u.Id == userId))
+                .Where(r => r.Id == roomId).Include(m => m.ChatMessages).FirstOrDefaultAsync();
+            
+            if (room != default)
+                return await CreateChatDto(room);
+            else
+                return null;
         }
     }
 }

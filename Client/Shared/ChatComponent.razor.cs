@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -17,9 +18,8 @@ namespace ForumSnackis.Client.Shared
         public List<UserDTO> Users { get; set; } = new();
         [Parameter]
         public EventCallback UpdateContacts { get; set; }
-        [CascadingParameter]
         public ChatDTO CurrentChat { get; set; }
-
+        [CascadingParameter] public Task<AuthenticationState> AuthState { get; set; }
         protected override async Task OnInitializedAsync()
         {
             Users = await GetContacts();
@@ -32,7 +32,6 @@ namespace ForumSnackis.Client.Shared
             if (request.IsSuccessStatusCode)
             {
                CurrentChat = await request.Content.ReadFromJsonAsync<ChatDTO>();
-
             }
             
         }
@@ -54,12 +53,42 @@ namespace ForumSnackis.Client.Shared
             }
             return null;
         }
-        public class ChatMessage {
-
+        public class ChatMessageModel {
+            [Required]
+            [MinLength(1)]
+            [MaxLength(255)]
             public string Message { get; set; } = "";
         }
 
-        public ChatMessage MessageModel { get; set; } = new();
+        public ChatMessageModel MessageModelModel { get; set; } = new();
 
+        private async Task SendMessage()
+        {
+            var privateHttp = HttpFactory.CreateClient("private");
+
+            var message = new MessageDTO()
+            {
+                Message = MessageModelModel.Message,
+                
+            };
+
+            var request = await privateHttp.PostAsJsonAsync($"api/Chat/{CurrentChat.id}", message);
+
+            if (request.IsSuccessStatusCode)
+            {
+                await GetChatRoom(CurrentChat.id);
+                MessageModelModel = new ChatMessageModel();
+            }
+        }
+
+        private async Task GetChatRoom(int currentChatId)
+        {
+            var privateHttp = HttpFactory.CreateClient("private");
+
+            var request = await privateHttp.GetAsync($"api/Chat/Room/{currentChatId}");
+
+            if (request.IsSuccessStatusCode)
+                CurrentChat = await request.Content.ReadFromJsonAsync<ChatDTO>();
+        }
     }
 }
