@@ -28,7 +28,7 @@ namespace ForumSnackis.Client.Shared
         private async Task OpenChat(string contactId)
         {
             var httpclient = HttpFactory.CreateClient("private");
-            var request = await httpclient.GetAsync($"api/Chat/{contactId}");
+            var request = await httpclient.GetAsync($"api/chat/{contactId}");
             if (request.IsSuccessStatusCode)
             {
                CurrentChat = await request.Content.ReadFromJsonAsync<ChatDTO>();
@@ -72,7 +72,7 @@ namespace ForumSnackis.Client.Shared
                 
             };
 
-            var request = await privateHttp.PostAsJsonAsync($"api/Chat/{CurrentChat.id}", message);
+            var request = await privateHttp.PostAsJsonAsync($"api/chat/{CurrentChat.id}", message);
 
             if (request.IsSuccessStatusCode)
             {
@@ -85,7 +85,7 @@ namespace ForumSnackis.Client.Shared
         {
             var privateHttp = HttpFactory.CreateClient("private");
 
-            var request = await privateHttp.GetAsync($"api/Chat/Room/{currentChatId}");
+            var request = await privateHttp.GetAsync($"api/chat/room/{currentChatId}");
 
             if (request.IsSuccessStatusCode)
                 CurrentChat = await request.Content.ReadFromJsonAsync<ChatDTO>();

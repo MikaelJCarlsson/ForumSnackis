@@ -61,7 +61,18 @@ namespace ForumSnackis.Server.Services
         {
             if(room.ChatMessages is null)
                 return new List<MessageDTO>();
-            return (List<MessageDTO>)room.ChatMessages.Select(x => new MessageDTO() { });
+            List<MessageDTO> messageDtos = new List<MessageDTO>();
+            foreach (var message in room.ChatMessages)
+            {
+                messageDtos.Add(new MessageDTO()
+                {
+                    Message = message.Message,
+                    TimeStamp = message.TimeStamp,
+                    PostedBy = message.PostedBy,
+                    UserId = message.ApplicationUserId
+                });
+            }
+            return messageDtos;
         }
 
         private static List<UserDTO> CreateUserDTO(IEnumerable<ApplicationUser> users)

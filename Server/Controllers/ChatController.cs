@@ -32,7 +32,7 @@ namespace ForumSnackis.Server.Controllers
             return Ok(result);
         }
         
-        [HttpGet("Room/{id}")]
+        [HttpGet("room/{id}")]
         public async Task<IActionResult> Get(int id)
         {
             var result = await service.GetChatRoom(id,User.Claims.FirstOrDefault(x => x.Type == "sub")?.Value);
