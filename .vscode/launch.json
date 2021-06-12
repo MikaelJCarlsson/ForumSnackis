@@ -4,8 +4,19 @@
 		{
 			"name": "Launch and Debug Standalone Blazor WebAssembly App",
 			"type": "blazorwasm",
-			"request": "attach",
+			"request": "launch",
 			"cwd": "${workspaceFolder}/Server"
-		}
-	]
+		},
+    {
+      "name": ".NET Core Launch (console)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/Server/bin/Debug/net5.0/ForumSnackis.Server.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/Server",
+      "stopAtEntry": false,
+      "console": "internalConsole"
+    }	
+ ]
 }
