@@ -163,8 +163,14 @@ namespace ForumSnackis.Server.Services
 
         public async Task<ChatDTO> GetChatRoom(int roomId, string userId)
         {
-            var room = await dbContext.ChatRooms.Include(u => u.Users.Where(u => u.Id == userId))
-                .Where(r => r.Id == roomId).Include(m => m.ChatMessages).FirstOrDefaultAsync();
+            // var room = await dbContext.ChatRooms.Include(u => u.Users.Where(u => u.Id == userId))
+            //     .Where(r => r.Id == roomId).Include(m => m.ChatMessages).FirstOrDefaultAsync();
+
+            var room = await dbContext.ChatRooms.Where(r => r.Id == roomId)
+                                                .Include(m => m.ChatMessages)
+                                                .Include(u => u.Users)
+                                                .Where(x => x.Users.Select(u => u.Id).Contains(userId))
+                                                .FirstOrDefaultAsync();
             
             if (room != default)
                 return await CreateChatDto(room);
