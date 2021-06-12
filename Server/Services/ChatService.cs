@@ -46,6 +46,29 @@ namespace ForumSnackis.Server.Services
             }
         }
 
+        internal async Task<List<ChatDTO>> GetAllRoomsAsync(string userId)
+        {
+            var rooms = await dbContext.ChatRooms.Include(x => x.Users).ToListAsync();
+            var user = await dbContext.Users.Include(x => x.ChatRooms).Where(x => x.Id == userId).FirstOrDefaultAsync();
+            
+            List<ChatDTO> chatrooms = new();
+            foreach (var room in rooms)
+            {
+                if (room.Users.Contains(user))
+                {
+                    chatrooms.Add(new ChatDTO
+                    {
+                        id = room.Id,
+                        Title = room.Id.ToString(),
+                        Messages = CreateChatMessageDTO(room),
+                        Users = CreateUserDTO(room.Users)
+
+                    });
+                }
+            }
+            return chatrooms; 
+        }
+
         private static Task<ChatDTO> CreateChatDto(ChatRoom room)
         {
             ChatDTO chatDTO = new()

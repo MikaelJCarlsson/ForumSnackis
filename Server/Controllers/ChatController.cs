@@ -25,6 +25,12 @@ namespace ForumSnackis.Server.Controllers
         {
             this.service = service;
         }
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var result = await service.GetAllRoomsAsync(User.Claims.FirstOrDefault(x => x.Type == "sub")?.Value);
+            return Ok(result);
+        }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetChatRoom(string id)
         {

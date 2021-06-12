@@ -15,22 +15,20 @@
                     }
                 </div>
                 <div class="card-body p-1 mb-1 d-flex flex-column overflow-auto" style="background-color: skyblue">
-                    <div>
-                        <p class="mb-0">Chat1</p>
-                        <small class="text-muted mb-0">Janne, Roger, Kenny</small>
-                    </div>
-                    <div>
-                        <p class="mb-0">Chat3</p>
-                        <small class="text-muted mb-0">Janne, Kent, Bengt</small>
-                    </div>
-                    <div>
-                        <p class="mb-0">Chat4</p>
-                        <small class="text-muted mb-0">Janne, Roger</small>
-                    </div>
-                    <div>
-                        <p class="mb-0">Chat2</p>
-                        <small class="text-muted mb-0">Kent, Bengt</small>
-                    </div>
+                    @if (ChatRooms != null)
+                    {
+                        @foreach (var room in ChatRooms)
+                        {
+                            <div>
+                                <p class="mb-0">Room @room.Title</p>
+                                @foreach (var user in room.Users)
+                                {
+                            <small class="text-muted mb-0">@user.UserName&nbsp;</small> 
+                                }
+                            </div>
+                        }
+                    }
+
                 </div>
             </div>
         </div>

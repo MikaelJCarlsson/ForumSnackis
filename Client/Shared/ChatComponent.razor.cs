@@ -18,13 +18,28 @@ namespace ForumSnackis.Client.Shared
         public List<UserDTO> Users { get; set; } = new();
         [Parameter]
         public EventCallback UpdateContacts { get; set; }
+        public List <ChatDTO> ChatRooms { get; set; }
         public ChatDTO CurrentChat { get; set; }
         [CascadingParameter] public Task<AuthenticationState> AuthState { get; set; }
         protected override async Task OnInitializedAsync()
         {
             Users = await GetContacts();
+            ChatRooms = await GetChatRooms();
             StateHasChanged();
         }
+
+        private async Task<List<ChatDTO>> GetChatRooms()
+        {
+            var httpclient = HttpFactory.CreateClient("private");
+            var request = await httpclient.GetAsync("api/chat");
+            if (request.IsSuccessStatusCode)
+            {
+                return ChatRooms = await request.Content.ReadFromJsonAsync<List<ChatDTO>>();
+            }
+            else
+                return null;
+        }
+
         private async Task OpenChat(string contactId)
         {
             var httpclient = HttpFactory.CreateClient("private");
