@@ -16,6 +16,7 @@ namespace ForumSnackis.Client.Shared
         [Inject]
         public IHttpClientFactory HttpFactory { get; set; }
         public List<UserDTO> Users { get; set; } = new();
+        public int Count { get; set; } = 1;
         [Parameter]
         public EventCallback UpdateContacts { get; set; }
         public List <ChatDTO> ChatRooms { get; set; }
@@ -48,12 +49,6 @@ namespace ForumSnackis.Client.Shared
             {
                CurrentChat = await request.Content.ReadFromJsonAsync<ChatDTO>();
             }
-            
-        }
-        private async Task CreateChat()
-        {   
-            
-            var httpclient = HttpFactory.CreateClient("private");
             
         }
         public async Task<List<UserDTO>> GetContacts()

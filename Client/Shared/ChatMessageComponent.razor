@@ -1,5 +1,5 @@
-<div>
-    @if (CurrentUserID == Message.UserId)
+
+    @if (CurrentUserID.Equals(Message.UserId))
     {
         <small class="text-muted mb-0 d-flex justify-content-end">
             @(Message.PostedBy) -
@@ -15,4 +15,3 @@
         </small>
         <p class="d-flex justify-content-start">@Message.Message</p>
     }
-</div>
