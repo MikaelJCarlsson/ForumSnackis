@@ -59,5 +59,11 @@ namespace ForumSnackis.Server.Controllers
             return result == 1 ? Ok() : StatusCode(500);
         }
 
+        [HttpPost("room/{roomId}")]
+        public async Task<IActionResult> AddUserToChatRoom(int roomId, [FromBody] string userIdToAdd)
+        {
+            var result = await service.AddUserToChatRoom(roomId, userIdToAdd, User.Claims.First(t => t.Type == "sub").Value);
+            return result ? Ok() : StatusCode(500);
+        }
     }
 }

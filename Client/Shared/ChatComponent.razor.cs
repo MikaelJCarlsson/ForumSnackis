@@ -100,5 +100,15 @@ namespace ForumSnackis.Client.Shared
             if (request.IsSuccessStatusCode)
                 CurrentChat = await request.Content.ReadFromJsonAsync<ChatDTO>();
         }
+
+        private async Task AddUserToChatRoom(UserDTO user) {
+            var privateHttp = HttpFactory.CreateClient("private");
+            var request = await privateHttp.PostAsJsonAsync($"api/chat/room/{CurrentChat.id}", user.UserId);
+
+            if (request.IsSuccessStatusCode){
+                await GetChatRoom(CurrentChat.id);
+                await GetChatRooms();
+            }
+        }
     }
 }

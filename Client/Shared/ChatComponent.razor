@@ -14,7 +14,7 @@
                                         <a @onclick="() => OpenChat(u.UserId)" class="mb-1">@u.UserName</a>
                                         @if (CurrentChat != null && !CurrentChat.Users.Select(x => x.UserId).Contains(u.UserId))
                                         {
-                                            <button class="mb-1 float-right btn btn-sm btn-primary">+</button>
+                                            <button @onclick="() => AddUserToChatRoom(u)" class="mb-1 float-right btn btn-sm btn-primary">+</button>
                                         }
                                     </span>
                                 }
