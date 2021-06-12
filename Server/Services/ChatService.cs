@@ -32,7 +32,7 @@ namespace ForumSnackis.Server.Services
                     return await CreateChatDto(roomsWithTwo);
                 }
 
-                ChatRoom newRoom = new() {Users = users};
+                ChatRoom newRoom = new() {Users = users, OwnerId = userId};
                 await dbContext.AddAsync(newRoom);
                 await dbContext.SaveChangesAsync();
                 
@@ -93,6 +93,7 @@ namespace ForumSnackis.Server.Services
             ChatDTO chatDTO = new()
             {
                 id = room.Id,
+                OwnerId = room.OwnerId,
                 Users = CreateUserDTO(room.Users),
                 Messages = CreateChatMessageDTO(room),
             };
