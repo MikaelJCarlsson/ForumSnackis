@@ -1,0 +1,16 @@
+@if (Quotes is not null)
+{
+        @foreach (var quote in Quotes)
+        {
+                <div class="container">
+                        <div class="oi oi-x" @onclick="() => ShowChildren = !ShowChildren"></div>
+                <small>@quote.Content - </small>
+                <small>
+                <cite>@quote.PostedBy</cite>
+                </small>
+                @if (ShowChildren) {
+                        <QuoteTreeComponent PostId="quote.Id"></QuoteTreeComponent>
+                }
+                </div>
+        }
+}
