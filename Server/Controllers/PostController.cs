@@ -41,6 +41,14 @@ namespace ForumSnackis.Server.Controllers
                 return NotFound();
 
         }
+        [HttpGet("quotes/{id}")]
+        public async Task<IActionResult> GetQuotes(int id)
+        {
+
+            var post = await service.GetQuotes(id);
+            return post is null ? NotFound() : Ok(post);
+
+        }
         [Authorize]
         [HttpPost("Report/")]
         public async Task<IActionResult> Post([FromBody] int id)

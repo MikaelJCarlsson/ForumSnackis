@@ -47,6 +47,18 @@ namespace ForumSnackis.Server.Services
                 return 0;
             }
         }
+        internal async Task<List<PostDTO>> GetQuotes(int id)
+        {
+            try {
+                var quotes = await dbContext.Posts.Where(x => x.Quote.Id == id).Include(p => p.PostedBy).ToListAsync();
+                var result = quotes.Select(x => CreatePostDTO(x)).ToList();
+                return result;
+            }
+            catch (Exception) {
+                return null;
+            }
+
+        }
         internal async Task<PostDTO> GetAsync(int id)
         {
             try
@@ -54,17 +66,7 @@ namespace ForumSnackis.Server.Services
                 var post = await dbContext.Posts.Include(x => x.PostedBy).Where(x => x.Id == id).FirstOrDefaultAsync();
                 if(post != null)
                 {
-                    var postDto = new PostDTO
-                    {
-                        PostDate = post.PostDate,
-                        Content = post.Content,
-                        Id = post.Id,
-                        PostedBy = post.PostedBy.UserName,
-                        SubjectId = post.SubjectId
-                        
-                     
-                    };
-                    return postDto;
+                    return CreatePostDTO(post);
                 }
                 return null;
             }
@@ -73,6 +75,20 @@ namespace ForumSnackis.Server.Services
                 return null;
             }
            
+        }
+
+        private static PostDTO CreatePostDTO(Post post)
+        {
+            return new PostDTO
+            {
+                PostDate = post.PostDate,
+                Content = post.Content,
+                Id = post.Id,
+                PostedBy = post.PostedBy.UserName,
+                SubjectId = post.SubjectId
+
+
+            };
         }
 
         internal async Task<int> DeleteAsync(int id)
