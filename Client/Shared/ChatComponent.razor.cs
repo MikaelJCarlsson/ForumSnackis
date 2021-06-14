@@ -40,7 +40,12 @@ namespace ForumSnackis.Client.Shared
             else
                 return null;
         }
+        private async Task RemoveUserFromGroupChat(string contactId)
+        {
+            var httpclient = HttpFactory.CreateClient("private");
+            var request = await httpclient.PutAsJsonAsync($"api/chat/{CurrentChat.id}",contactId);
 
+        }
         private async Task OpenChat(string contactId)
         {
             var httpclient = HttpFactory.CreateClient("private");
@@ -48,8 +53,8 @@ namespace ForumSnackis.Client.Shared
             if (request.IsSuccessStatusCode)
             {
                CurrentChat = await request.Content.ReadFromJsonAsync<ChatDTO>();
-            }
-            
+                ChatRooms = await GetChatRooms();
+            }    
         }
         public async Task<List<UserDTO>> GetContacts()
         {

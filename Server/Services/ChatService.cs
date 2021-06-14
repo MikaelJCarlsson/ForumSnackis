@@ -23,7 +23,7 @@ namespace ForumSnackis.Server.Services
         {
             try
             {
-                var users = await dbContext.Users.Where(u => u.Id == contactId || u.Id == userId).Include((r => r.ChatRooms)).ToListAsync();
+                var users = await dbContext.Users.Where(u => u.Id == contactId || u.Id == userId).Include((r => r.ChatRooms)).ThenInclude(x => x.Users).ToListAsync();
                 var commonRooms = users.First().ChatRooms.Intersect(users.Last().ChatRooms);
                 var roomsWithTwo = commonRooms.FirstOrDefault(room => room.Users.Count == 2);
                 
@@ -85,6 +85,20 @@ namespace ForumSnackis.Server.Services
                 return await dbContext.SaveChangesAsync() > 0;
             }
 
+            return false;
+        }
+
+        internal async Task<bool> RemoveUserFromChatRoom(int roomId, string userIdToRemove, string userId)
+        {
+            var room = await dbContext.ChatRooms.Include(x => x.Users).Where(x => x.Id == roomId).FirstOrDefaultAsync();
+            var userIdsInRoom = room.Users.Select(x => x.Id);
+            if (userIdsInRoom.Contains(userIdToRemove) && userId == room.OwnerId)
+            {
+                var userToRemove = room.Users.Where(x => x.Id == userIdToRemove).FirstOrDefault();
+                room.Users.Remove(userToRemove);
+                dbContext.Update(room);
+                return await dbContext.SaveChangesAsync() > 0;
+            }
             return false;
         }
 
