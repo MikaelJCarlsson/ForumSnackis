@@ -12,9 +12,19 @@
                                 {
                                     <span>
                                         <a @onclick="() => OpenChat(u.UserId)" class="mb-1">@u.UserName</a>
-                                        @if (CurrentChat != null && !CurrentChat.Users.Select(x => x.UserId).Contains(u.UserId))
+                                        @if(CurrentChat != null)
                                         {
-                                            <button @onclick="() => AddUserToChatRoom(u)" class="mb-1 float-right btn btn-sm btn-primary">+</button>
+                                            @if (!CurrentChat.Users.Select(x => x.UserId).Contains(u.UserId) && CurrentChat.OwnerId == authContext.User.Claims.First(x => x.Type == "sub").Value)
+                                            {
+                                                <button @onclick="() => AddUserToChatRoom(u)" class="mb-1 float-right btn btn-sm btn-primary">+</button>
+                                            }
+                                            else if (CurrentChat.Users.Count > 2 && CurrentChat.Users.Select(x => x.UserId).Contains(u.UserId))
+                                            {
+                                                @if (CurrentChat.OwnerId == authContext.User.Claims.First(x => x.Type == "sub").Value)
+                                                {
+                                                    <button @onclick="() => RemoveUserFromGroupChat(u.UserId)" class="mb-1 float-right btn btn-sm btn-danger">-</button>
+                                                }
+                                            }
                                         }
                                     </span>
                                 }

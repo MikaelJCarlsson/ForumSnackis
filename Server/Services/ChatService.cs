@@ -92,6 +92,10 @@ namespace ForumSnackis.Server.Services
         {
             var room = await dbContext.ChatRooms.Include(x => x.Users).Where(x => x.Id == roomId).FirstOrDefaultAsync();
             var userIdsInRoom = room.Users.Select(x => x.Id);
+
+            if ( room.Users.Count <= 2)
+                return false;
+
             if (userIdsInRoom.Contains(userIdToRemove) && userId == room.OwnerId)
             {
                 var userToRemove = room.Users.Where(x => x.Id == userIdToRemove).FirstOrDefault();

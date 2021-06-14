@@ -65,7 +65,7 @@ namespace ForumSnackis.Server.Controllers
             var result = await service.AddUserToChatRoom(roomId, userIdToAdd, User.Claims.First(t => t.Type == "sub").Value);
             return result ? Ok() : StatusCode(500);
         }
-        [HttpPut("room/{userId}")]
+        [HttpPut("room/{roomId}")]
         public async Task<IActionResult> RemoveUserFromChatRoom(int roomId, [FromBody] string userIdToRemove)
         {
             var result = await service.RemoveUserFromChatRoom(roomId, userIdToRemove, User.Claims.First(t => t.Type == "sub").Value);

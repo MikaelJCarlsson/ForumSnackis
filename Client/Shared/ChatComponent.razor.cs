@@ -19,7 +19,7 @@ namespace ForumSnackis.Client.Shared
         public int Count { get; set; } = 1;
         [Parameter]
         public EventCallback UpdateContacts { get; set; }
-        public List <ChatDTO> ChatRooms { get; set; }
+        public List<ChatDTO> ChatRooms { get; set; }
         public ChatDTO CurrentChat { get; set; }
         [CascadingParameter] public Task<AuthenticationState> AuthState { get; set; }
         protected override async Task OnInitializedAsync()
@@ -43,8 +43,13 @@ namespace ForumSnackis.Client.Shared
         private async Task RemoveUserFromGroupChat(string contactId)
         {
             var httpclient = HttpFactory.CreateClient("private");
-            var request = await httpclient.PutAsJsonAsync($"api/chat/{CurrentChat.id}",contactId);
+            var request = await httpclient.PutAsJsonAsync($"api/chat/room/{CurrentChat.id}", contactId);
 
+            if (request.IsSuccessStatusCode)
+            {
+                await GetChatRooms();
+                await GetChatRoom(CurrentChat.id);
+            }
         }
         private async Task OpenChat(string contactId)
         {
@@ -52,9 +57,9 @@ namespace ForumSnackis.Client.Shared
             var request = await httpclient.GetAsync($"api/chat/{contactId}");
             if (request.IsSuccessStatusCode)
             {
-               CurrentChat = await request.Content.ReadFromJsonAsync<ChatDTO>();
-                ChatRooms = await GetChatRooms();
-            }    
+                CurrentChat = await request.Content.ReadFromJsonAsync<ChatDTO>();
+                await GetChatRooms();
+            }
         }
         public async Task<List<UserDTO>> GetContacts()
         {
@@ -63,12 +68,13 @@ namespace ForumSnackis.Client.Shared
             var request = await httpclient.GetAsync($"api/User");
             if (request.IsSuccessStatusCode)
             {
-                return await request.Content.ReadFromJsonAsync<List<UserDTO>>();
+                return Users = await request.Content.ReadFromJsonAsync<List<UserDTO>>();
 
             }
             return null;
         }
-        public class ChatMessageModel {
+        public class ChatMessageModel
+        {
             [Required]
             [MinLength(1)]
             [MaxLength(255)]
@@ -84,7 +90,7 @@ namespace ForumSnackis.Client.Shared
             var message = new MessageDTO()
             {
                 Message = MessageModelModel.Message,
-                
+
             };
 
             var request = await privateHttp.PostAsJsonAsync($"api/chat/{CurrentChat.id}", message);
@@ -106,11 +112,13 @@ namespace ForumSnackis.Client.Shared
                 CurrentChat = await request.Content.ReadFromJsonAsync<ChatDTO>();
         }
 
-        private async Task AddUserToChatRoom(UserDTO user) {
+        private async Task AddUserToChatRoom(UserDTO user)
+        {
             var privateHttp = HttpFactory.CreateClient("private");
             var request = await privateHttp.PostAsJsonAsync($"api/chat/room/{CurrentChat.id}", user.UserId);
 
-            if (request.IsSuccessStatusCode){
+            if (request.IsSuccessStatusCode)
+            {
                 await GetChatRoom(CurrentChat.id);
                 await GetChatRooms();
             }
