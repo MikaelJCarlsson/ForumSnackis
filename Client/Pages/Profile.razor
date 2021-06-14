@@ -22,7 +22,15 @@
 
                     <div class="custom-file text-sm-left">
                         <InputFile class="custom-file-input" OnChange="OnChange" accept="image/png, image/jpeg, image/gif" id="inputFile" />
-                        <label class="custom-file-label" for="inputFile">Upload Image</label>
+                        @if (filesBase64.Count == 0)
+                        {
+                            <label class="custom-file-label" for="inputFile">Upload Image</label>
+                        }
+                        else
+                        {
+                            <label class="custom-file-label" for="inputFile">@filesBase64.First().fileName</label>
+                        }
+
                     </div>
                     <div class="input-group-append">
                         <button class="btn btn-success" @onclick="Upload" disabled="@isDisabled">Upload</button>
