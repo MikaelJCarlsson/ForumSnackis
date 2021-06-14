@@ -64,14 +64,10 @@ namespace ForumSnackis.Server.Services
             try
             {
                 var listOfForum = await dbContext.Forums.Include(c => c.Categories).ToListAsync();
-                List<ForumDTO> listOfForumDTO = new();
 
-                foreach (var forum in listOfForum)
-                    listOfForumDTO.Add(MapForumToDTO(forum));
-
-                return listOfForumDTO;
+                return listOfForum.Select(MapForumToDTO).ToList();
             }
-            catch (ArgumentNullException)
+            catch (Exception)
             {
                 throw;
             }

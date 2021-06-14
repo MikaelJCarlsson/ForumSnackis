@@ -57,6 +57,7 @@ namespace ForumSnackis.Server
             services.AddScoped<PostService>();
             services.AddScoped<ImageService>();
             services.AddScoped<UserService>();
+            services.AddScoped<ChatService>();
 
 
             services.AddHttpClient();

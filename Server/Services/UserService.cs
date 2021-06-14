@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace ForumSnackis.Server.Services
@@ -30,10 +31,33 @@ namespace ForumSnackis.Server.Services
                     JoinDate = query.RegistrationDate,
                     Posts = query.Posts.Count()
                 };
-                Console.WriteLine(user.UserName);
                 return user;
             }
             catch(Exception)
+            {
+                return null;
+            }
+        }
+
+        internal async Task<List<UserDTO>> GetUsersAsync(ClaimsPrincipal claim)
+        {
+            try
+            {
+                var query = await dbContext.Users.Where(x => x.UserName != claim.Identity.Name).ToListAsync();
+                var users = new List<UserDTO>();
+                foreach (var q in query)
+                {
+                    users.Add(new UserDTO
+                    {
+                        UserName = q.UserName,
+                        UserId = q.Id,
+                        JoinDate = DateTime.Now,
+                        ImagePath = ""
+                    });
+                }
+                return users;
+            }
+            catch (Exception)
             {
                 return null;
             }

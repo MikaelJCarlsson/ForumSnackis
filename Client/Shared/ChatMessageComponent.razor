@@ -1,0 +1,17 @@
+
+    @if (CurrentUserID.Equals(Message.UserId))
+    {
+        <small class="text-muted mb-0 d-flex justify-content-end">
+            @(Message.PostedBy) -
+            @Message.TimeStamp.ToShortDateString()
+        </small>
+        <p class="d-flex justify-content-end">@Message.Message</p>
+    }
+    else
+    {
+        <small class="text-muted mb-0 d-flex justify-content-start">
+            @(Message.PostedBy) -
+            @Message.TimeStamp.ToShortDateString()
+        </small>
+        <p class="d-flex justify-content-start">@Message.Message</p>
+    }
