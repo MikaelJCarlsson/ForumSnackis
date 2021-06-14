@@ -6,9 +6,10 @@
 
 <AuthorizeView>
     <Authorized>
-        <a href="/">Home</a>
-        <a href="/Profile/@context.User.Identity.Name">Hello, @context.User.Identity.Name!</a>
-        <button class="nav-link btn btn-link" @onclick="BeginSignOut">Log out</button>
+        <a href="/"><i class="oi oi-home"></i></a>
+        <a href="/Chat"><i class="oi oi-envelope-closed"></i></a>
+        <a href="/Profile/@context.User.Identity.Name"><i class="oi oi-person"></i></a>
+        <button class="nav-link btn btn-link" @onclick="BeginSignOut"><small>Log out</small></button>
     </Authorized>
     <NotAuthorized>
         <a href="/">Home</a>
