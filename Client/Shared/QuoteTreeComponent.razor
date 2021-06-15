@@ -1,16 +1,18 @@
-@if (Quotes is not null)
+@if (Quote is not null && Visible)
 {
-        @foreach (var quote in Quotes)
-        {
+        
                 <div class="container">
-                        <div class="oi oi-x" @onclick="() => ShowChildren = !ShowChildren"></div>
-                <small>@quote.Content - </small>
+                <div class="oi oi-x" @onclick="() => ShowChildren = !ShowChildren"></div>
+                <small>@Quote.Content - </small>
                 <small>
-                <cite>@quote.PostedBy</cite>
+                <cite>@Quote.PostedBy</cite>
                 </small>
-                @if (ShowChildren) {
-                        <QuoteTreeComponent PostId="quote.Id"></QuoteTreeComponent>
+                @if (ShowChildren && ChildQuotes is not null)
+                {
+                        @foreach (var quote in ChildQuotes)
+                        {
+                                <QuoteTreeComponent PostId="quote.Id" Visible="true"></QuoteTreeComponent>
+                        }
                 }
                 </div>
-        }
 }

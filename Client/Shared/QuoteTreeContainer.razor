@@ -1,0 +1,32 @@
+@using ForumSnackis.Shared.DTO
+@inject IHttpClientFactory HttpFactory
+<div class="container">
+        @if(ChildQuotes is not null)
+        {
+                @foreach(var quote in ChildQuotes)
+                {
+                        <QuoteTreeComponent Visible="true" PostId="quote.Id"></QuoteTreeComponent>
+                }
+        }
+</div>
+
+@code
+{
+        [Parameter]
+        public int PostId { get; set; }
+
+        public List<PostDTO> ChildQuotes { get; set; }
+        
+        protected override async Task OnParametersSetAsync() {
+                await GetQuotes(PostId);
+        }
+         private async Task GetQuotes(int postId){
+            var publicHttp = HttpFactory.CreateClient("public");
+            var request = await publicHttp.GetAsync($"api/post/quotes/{PostId}");
+
+            if (request.IsSuccessStatusCode)
+            {
+                ChildQuotes = await request.Content.ReadFromJsonAsync<List<PostDTO>>();
+            }
+        }
+}
