@@ -19,8 +19,7 @@ namespace ForumSnackis.Client.Shared
         public bool Visible { get; set; }
 
         public PostDTO Quote { get; set; }
-
-         protected override async Task OnParametersSetAsync() {
+        protected override async Task OnParametersSetAsync() {
              await GetPost();
              await GetQuotes(PostId);
          }

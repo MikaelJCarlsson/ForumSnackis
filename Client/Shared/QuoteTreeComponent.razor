@@ -2,11 +2,17 @@
 {
         
                 <div class="container">
-                <div class="oi oi-x" @onclick="() => ShowChildren = !ShowChildren"></div>
-                <small>@Quote.Content - </small>
-                <small>
-                <cite>@Quote.PostedBy</cite>
-                </small>
+                    <div class="row d-flex">
+                        <span class="oi oi-caret-right col-1 d-flex justify-content-end" @onclick="() => ShowChildren = !ShowChildren" style="padding-right: 0px; padding-top: 10px;"></span>
+                        <figure class="border p-2 col-11">
+                            <small>@Quote.Content - </small>
+                            <small>
+                                <cite>@Quote.PostedBy</cite>
+                            </small>
+                        </figure>
+                    </div>
+
+
                 @if (ShowChildren && ChildQuotes is not null)
                 {
                         @foreach (var quote in ChildQuotes)
