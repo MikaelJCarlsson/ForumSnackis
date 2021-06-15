@@ -25,6 +25,7 @@ namespace ForumSnackis.Client.Shared
         private bool ShowReplyForm { get; set; }
         private bool ShowEditForm { get; set; }
         public PostDTO EditedPost { get; set; }
+        public List<PostDTO> Quotes { get; set; }
         public bool Liked { get; set; }
         public bool Disliked { get; set; }
         [Parameter]
@@ -35,7 +36,6 @@ namespace ForumSnackis.Client.Shared
 
         protected override async Task OnParametersSetAsync()
         {
-            
             this.StateHasChanged();
         }
 
@@ -51,6 +51,7 @@ namespace ForumSnackis.Client.Shared
                 }
             }
         }
+
 
         private void ToggleReplyForm(bool show)
         {
