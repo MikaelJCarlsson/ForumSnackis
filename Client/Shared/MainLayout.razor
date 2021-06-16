@@ -1,6 +1,13 @@
 ﻿@inherits LayoutComponentBase
 
 <div class="page">
+    @if(!acceptCookies) {
+        <div class="container">
+        <h>This site uses cookies</h>
+        <button class="btn btn primary" @onclick="() => acceptCookies = true">Accept</button>
+    </div>
+    }
+            @if(acceptCookies) {
     <div class="main">
         <div class="top-row px-4 auth">
             <LoginDisplay />
@@ -9,4 +16,9 @@
             @Body
         </div>
     </div>
+            }
 </div>
+
+@code {
+    private bool acceptCookies;
+}
