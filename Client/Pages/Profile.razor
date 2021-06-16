@@ -1,47 +1,65 @@
 ﻿@page "/Profile/{UserName}"
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
-@if(UserName != null)
+
+@if (UserName != null)
 {
 
 
-<AuthorizeView>
-    <Authorized>
-        @if (UserData != null)
-        {
-        <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    <AuthorizeView>
+        <Authorized>
+            @if (UserData != null)
+            {
+                <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
                               max-width: 300px;
                               margin: auto;
                               text-align: center;">
-            <img src="@UserData.ImagePath" alt="" style="width:100%" />
-            <h3>@UserData.UserName</h3>
-            <p class="font-weight-light">Admin, Big Boss, sucks at FE</p>           
-            @if (context.User.Identity.Name == UserName)
-            {
-                <div class="input-group mt-2" >
+                    <img src="@UserData.ImagePath" alt="" style="width:100%" />
+                    <h3>@UserData.UserName</h3>
+                    <div class="p-2">
+                        <figure class="border p-2">
+                            <blockquote class="blockquote">
+                                @if (UserData.UserBio == null)
+                                {
+                                    <small>
+                                        <p class="text-muted">Account created before Bio</p>
+                                    </small>
 
-                    <div class="custom-file text-sm-left">
-                        <InputFile class="custom-file-input" OnChange="OnChange" accept="image/png, image/jpeg, image/gif" id="inputFile" />
-                        @if (filesBase64.Count == 0)
-                        {
-                            <label class="custom-file-label" for="inputFile">Upload Image</label>
-                        }
-                        else
-                        {
-                            <label class="custom-file-label" for="inputFile">@filesBase64.First().fileName</label>
-                        }
+                                }
+                                else
+                                { <small>
+                                        <p class="text-muted">@UserData.UserBio</p>
+                                    </small>
+                                }
+                            </blockquote>
+                        </figure>
+                    </div>
+                    @if (context.User.Identity.Name == UserName)
+                    {
+                        <div class="input-group mt-2">
 
-                    </div>
-                    <div class="input-group-append">
-                        <button class="btn btn-success" @onclick="Upload" disabled="@isDisabled">Upload</button>
-                    </div>
+                            <div class="custom-file text-sm-left">
+                                <InputFile class="custom-file-input" OnChange="OnChange" accept="image/png, image/jpeg, image/gif" id="inputFile" />
+                                @if (filesBase64.Count == 0)
+                                {
+                                    <label class="custom-file-label" for="inputFile">Upload Image</label>
+                                }
+                                else
+                                {
+                                    <label class="custom-file-label" for="inputFile">@filesBase64.First().fileName</label>
+                                }
+
+                            </div>
+                            <div class="input-group-append">
+                                <button class="btn btn-success" @onclick="Upload" disabled="@isDisabled">Upload</button>
+                            </div>
+                        </div>
+
+                    }
                 </div>
-
             }
-        </div>
-        }
-    </Authorized>
-</AuthorizeView>
+        </Authorized>
+    </AuthorizeView>
 
 
 

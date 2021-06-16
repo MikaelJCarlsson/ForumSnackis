@@ -29,7 +29,8 @@ namespace ForumSnackis.Server.Services
                     UserName = query.UserName,
                     ImagePath = query.ImagePath,
                     JoinDate = query.RegistrationDate,
-                    Posts = query.Posts.Count()
+                    Posts = query.Posts.Count(),
+                    UserBio = query?.UserBio                   
                 };
                 return user;
             }

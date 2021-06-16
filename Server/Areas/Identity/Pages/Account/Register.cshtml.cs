@@ -83,7 +83,8 @@ namespace RoleEnabledWebAssembly.Server.Areas.Identity.Pages
                     {
                         UserName = Input.UserName,
                         Email = Input.Email,
-                        ImagePath = "https://cdn.frankerfacez.com/emoticon/447568/4"
+                        ImagePath = "https://cdn.frankerfacez.com/emoticon/447568/4",
+                        UserBio = "Forum Troll"                       
                     };
                 var result =
                     await _userManager.CreateAsync(user, Input.Password);
