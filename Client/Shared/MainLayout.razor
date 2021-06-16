@@ -26,16 +26,16 @@
 @code {      
     protected override async Task OnInitializedAsync()
     {
-        FindCookie("ConsentCookie");
+        await FindCookie("ConsentCookie");
     }
 
     private async Task CreateCookie(string name, bool value)
     {
-        var test = await JSRuntime.InvokeAsync<string>("methods.CreateCookie", name, value);
+        await JSRuntime.InvokeVoidAsync("window.CreateCookie", name, value);
     }
     private async Task FindCookie(string name)
     {
-        AcceptCookie = await JSRuntime.InvokeAsync<bool>("methods.FindCookie", name);
+        AcceptCookie = await JSRuntime.InvokeAsync<bool>("window.FindCookie", name);
     }
 
     public bool AcceptCookie { get; set; }
