@@ -1,24 +1,48 @@
 ﻿@inherits LayoutComponentBase
-
+@inject IJSRuntime JSRuntime
 <div class="page">
-    @if(!acceptCookies) {
-        <div class="container">
-        <h>This site uses cookies</h>
-        <button class="btn btn primary" @onclick="() => acceptCookies = true">Accept</button>
-    </div>
+    @if (AcceptCookie)
+    {
+        <div class="main">
+            <div class="top-row px-4 auth">
+                <LoginDisplay />
+            </div>
+            <div class="content px-4 container">
+                @Body
+            </div>
+        </div>
     }
-            @if(acceptCookies) {
-    <div class="main">
-        <div class="top-row px-4 auth">
-            <LoginDisplay />
+    else
+    {
+        <div class="container d-flex align-items-center justify-content-center min-vh-100">
+            <CookiesConsent accepted="AcceptCookies"></CookiesConsent>
         </div>
-        <div class="content px-4 container">
-            @Body
-        </div>
-    </div>
-            }
+    }
+
+
 </div>
 
-@code {
-    private bool acceptCookies;
+
+@code {      
+    protected override async Task OnInitializedAsync()
+    {
+        FindCookie("ConsentCookie");
+    }
+
+    private async Task CreateCookie(string name, bool value)
+    {
+        var test = await JSRuntime.InvokeAsync<string>("methods.CreateCookie", name, value);
+    }
+    private async Task FindCookie(string name)
+    {
+        AcceptCookie = await JSRuntime.InvokeAsync<bool>("methods.FindCookie", name);
+    }
+
+    public bool AcceptCookie { get; set; }
+
+    public async void AcceptCookies(bool accept)
+    {
+        await CreateCookie("ConsentCookie", true);
+        await FindCookie("ConsentCookie");
+    }
 }
