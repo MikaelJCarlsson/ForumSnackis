@@ -89,25 +89,18 @@ namespace ForumSnackis.Client.Shared
                 Reply.SubjectId = Post.SubjectId;
                 Reply.QuoteId = Post.Id;
                 var privateHttp = HttpFactory.CreateClient("private");
-                /*               
-                                var filterdString = await privateHttp.PostAsJsonAsync("https://localhost:44353/Filter", Reply.Content);
-                                if (filterdString.IsSuccessStatusCode)
-                                {
-                                    Reply.Content = await filterdString.Content.ReadAsStringAsync();
-                                    var result = await privateHttp.PostAsJsonAsync($"api/Subject/Posts/", Reply);
 
-                                    if (result.IsSuccessStatusCode)
-                                    {
-                                        await UpdatePosts.InvokeAsync();
-                                        ToggleReplyForm(false);
-                                    }
-                                }*/
-                var result = await privateHttp.PostAsJsonAsync($"api/Subject/Posts/", Reply);
-                await Upload(await result.Content.ReadFromJsonAsync<int>());
-                if (result.IsSuccessStatusCode)
+                var filterdString = await privateHttp.PostAsJsonAsync("https://forumsnackisfilter.azurewebsites.net/Filter", Reply.Content);
+                if (filterdString.IsSuccessStatusCode)
                 {
-                    await UpdatePosts.InvokeAsync();
-                    ToggleReplyForm(false);
+                    Reply.Content = await filterdString.Content.ReadAsStringAsync();
+                    var result = await privateHttp.PostAsJsonAsync($"api/Subject/Posts/", Reply);
+                    await Upload(await result.Content.ReadFromJsonAsync<int>());
+                    if (result.IsSuccessStatusCode)
+                    {
+                        await UpdatePosts.InvokeAsync();
+                        ToggleReplyForm(false);
+                    }
                 }
             }
         }

@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <UserSecretsId>ForumSnackis.Server-5B63149A-A81B-4343-B249-7C22F475038D</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

@@ -99,19 +99,26 @@ namespace ForumSnackis.Client.Pages
                 {
                     NewPost.Content = "";
                 }
-                var request = await privateHttp.PostAsJsonAsync("api/Subject/Posts/", NewPost);
 
-                if (request.IsSuccessStatusCode)
+                var filterdString = await privateHttp.PostAsJsonAsync("https://forumsnackisfilter.azurewebsites.net/Filter", NewPost.Content);
+                if (filterdString.IsSuccessStatusCode)
                 {
-                    NewPost.Content = "";
-                    if(filesBase64 != null)
+                    NewPost.Content = await filterdString.Content.ReadAsStringAsync();
+                    var request = await privateHttp.PostAsJsonAsync("api/Subject/Posts/", NewPost);
+                    if (request.IsSuccessStatusCode)
                     {
-                        var id = await request.Content.ReadFromJsonAsync<int>();
-                        await Upload(id);
+                        NewPost.Content = "";
+                        if (filesBase64 != null)
+                        {
+                            var id = await request.Content.ReadFromJsonAsync<int>();
+                            await Upload(id);
+                        }
+                        await UpdatePosts();
+
                     }
-                    await UpdatePosts();
-                    
                 }
+                  
+
             }
         }
         async Task OnChange(InputFileChangeEventArgs e)
