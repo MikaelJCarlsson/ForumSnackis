@@ -32,13 +32,27 @@ namespace ForumSnackis.Client.Pages
                 UserData = await response.Content.ReadFromJsonAsync<UserDTO>();
             }
         }
+        private async Task UpdatePassword()
+        {
+            var httpclient = HttpFactory.CreateClient("private");
+            var response = await httpclient.PutAsJsonAsync($"api/User/UpdatePassword/{UserData.UserId}",EditedUser.NewPassword);
+            if (response.IsSuccessStatusCode)
+            {
+                response = await httpclient.GetAsync($"api/User/{UserName}");
+                if (response.IsSuccessStatusCode)
+                {
+                    UserData = await response.Content.ReadFromJsonAsync<UserDTO>();
+                }
+            }
+        }
+    
         private async Task UpdateUserBio()
         {
             ShowEditForm = false;
             ToggleControll = true;
 
             var httpclient = HttpFactory.CreateClient("private");
-            var response = await httpclient.PutAsJsonAsync($"api/User/EditBio/{UserData.UserId}",EditedUser.UserBio);
+            var response = await httpclient.PutAsJsonAsync($"api/User/EditBio/{UserData.UserId}", EditedUser.UserBio);
             if (response.IsSuccessStatusCode)
             {
                 response = await httpclient.GetAsync($"api/User/{UserName}");

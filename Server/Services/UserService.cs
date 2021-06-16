@@ -1,6 +1,7 @@
 ﻿using ForumSnackis.Server.Data;
 using ForumSnackis.Server.Models;
 using ForumSnackis.Shared.DTO;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,9 +14,11 @@ namespace ForumSnackis.Server.Services
     public class UserService
     {
         private readonly ApplicationDbContext dbContext;
-        public UserService(ApplicationDbContext dbContext)
+        private readonly UserManager<ApplicationUser> userManager;
+        public UserService(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager)
         {
             this.dbContext = dbContext;
+            this.userManager = userManager;
         }
 
         public async Task<UserDTO> GetUserAsync(string username)
@@ -63,6 +66,25 @@ namespace ForumSnackis.Server.Services
             {
                 return null;
             }
+        }
+
+        internal async Task<int> UpdatePasswordAsync(string id, string password)
+        {
+            var user = await dbContext.Users.FindAsync(id);
+
+            if(user != null)
+            {
+                user.PasswordHash = password;
+                var token = await userManager.GeneratePasswordResetTokenAsync(user);
+                var passworduser = await userManager.ResetPasswordAsync(user, token, user.PasswordHash);
+                if (passworduser.Succeeded)
+                {
+                    dbContext.Update(user);
+                    return await dbContext.SaveChangesAsync();
+                }
+                return 0;
+            }
+            return 0;
         }
 
         internal async Task<int> EditUserBioAsync(string id, string bio)

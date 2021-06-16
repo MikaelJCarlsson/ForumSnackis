@@ -50,5 +50,15 @@ namespace ForumSnackis.Server.Controllers
             }
             return StatusCode(500);
         }
+        [HttpPut("UpdatePassword/{id}")]
+        public async Task<IActionResult> UpdatePasswordAsync(string id, [FromBody] string password)
+        {
+            var result = await service.UpdatePasswordAsync(id, password);
+            if (result == 1)
+            {
+                return Ok();
+            }
+            return StatusCode(500);
+        }
     }
 }
