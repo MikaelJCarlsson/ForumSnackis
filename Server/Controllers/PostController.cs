@@ -21,7 +21,7 @@ namespace ForumSnackis.Server.Controllers
             this.service = service;
         }
         [Authorize(Roles = "Administrators")]
-        [HttpGet]
+        [HttpGet("reportedposts")]
         public async Task<IActionResult> Get()
         {
             var posts = await service.GetReportsAsync();
@@ -75,6 +75,17 @@ namespace ForumSnackis.Server.Controllers
             else
                 return StatusCode(409);
         }
+        [HttpPut("Report/{id}")]
+        [Authorize]
+        public async Task<IActionResult> Put(int id, [FromBody] string content)
+        {
+            var result = await service.UpdateReportedPost(id, content, User);
+            if (result != 0)
+                return Ok();
+            else
+                return StatusCode(409);
+        }
+
         [HttpDelete("{id}")]
         [Authorize(Roles = "Administrators")]
         public async Task<IActionResult> Delete(int id)
@@ -85,5 +96,16 @@ namespace ForumSnackis.Server.Controllers
             else
                 return NotFound();
         }
+        [HttpDelete("Report/{id}")]
+        [Authorize(Roles = "Administrators")]
+        public async Task<IActionResult> DeleteReportedPost(int id)
+        {
+            var post = await service.DeleteReportedPost(id);
+            if (post != 0)
+                return Ok();
+            else
+                return NotFound();
+        }
+
     }
 }

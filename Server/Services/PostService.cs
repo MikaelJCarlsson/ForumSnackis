@@ -33,7 +33,7 @@ namespace ForumSnackis.Server.Services
 
                     var report = new Report()
                     {
-                        ReportedBy = reportedByUser,
+                       /* ReportedBy = reportedByUser,*/
                         Post = reportedPost
                     };
 
@@ -90,7 +90,19 @@ namespace ForumSnackis.Server.Services
 
             };
         }
-
+        internal async Task<int> DeleteReportedPost(int id)
+        {
+            await DeleteReportedPostAsync(id);
+            return await dbContext.SaveChangesAsync();
+        }
+        internal async Task DeleteReportedPostAsync(int id)
+        {
+            var reportedPost = await dbContext.Reports.Where(x => x.PostId == id).FirstOrDefaultAsync();
+            if (reportedPost != null)
+            {
+                dbContext.Remove(reportedPost);
+            }
+        }
         internal async Task<int> DeleteAsync(int id)
         {
             try
@@ -98,6 +110,7 @@ namespace ForumSnackis.Server.Services
                 var post = await dbContext.Posts.FindAsync(id);
                 if(post is not null)
                 {
+                    await DeleteReportedPostAsync(id);
                     await dbContext.Posts.Where(p => p.Quote == post).ForEachAsync(p => p.Quote = null);
                     dbContext.Remove(post);
                     return await dbContext.SaveChangesAsync();
@@ -109,7 +122,27 @@ namespace ForumSnackis.Server.Services
                 return 0;
             }
         }
-
+        internal async Task<int> UpdateReportedPost(int id, string content, ClaimsPrincipal claim)
+        {
+            try
+            {
+                var query = await dbContext.Posts.Include(x => x.PostedBy).Where(x => x.Id == id).FirstOrDefaultAsync();
+                var cls = claim.Claims;
+                var user = claim.Claims.First().Value;
+                if (user.Equals(query.PostedBy.Id) || claim.IsInRole("Administrators"))
+                {
+                    query.Content = content;
+                    dbContext.Update(query);
+                    await DeleteReportedPostAsync(id);
+                    return await dbContext.SaveChangesAsync();
+                }
+                return 0;
+            }
+            catch (Exception)
+            {
+                return 0;
+            }
+        }
         internal async Task<int> UpdateAsync(int id, PostDTO post, ClaimsPrincipal claim)
         {
             try
@@ -138,22 +171,32 @@ namespace ForumSnackis.Server.Services
         {
             try
             {
-                var post = await dbContext.Reports.Include(x => x.Post).ThenInclude(x => x.PostedBy).ToListAsync();
+                var reportedPost = await dbContext.Reports.Include(x => x.Post).ThenInclude(x => x.PostedBy).ToListAsync();
 
                 List<PostDTO> posts = new();
-                if (post is not null)
+                if (reportedPost is not null)
                 {
-                    foreach (var p in post)
+                    foreach (var p in reportedPost)
                     {
                         posts.Add(
                             new PostDTO()
                             {
                                 
                                 Id = p.Post.Id,
+                                UserId = p.Post.PostedById,
                                 Content = p.Post.Content,
                                 PostDate = p.Post.PostDate,
-                                PostedBy = p.Post.PostedBy.UserName,
+                                PostedBy = p.Post.PostedBy?.UserName,
                                 SubjectId = p.Post.SubjectId,
+                                QuoteContent = p.Post.Quote?.Content,
+                                QuoteId = p.Post.Quote?.Id,
+                                QuotePostedBy = p.Post.Quote?.PostedBy.UserName,
+                                PostCount = p.Post.PostedBy.Posts.Count(),
+                                AccountCreated = p.Post.PostedBy.RegistrationDate,
+                                ImagePath = p.Post.PostedBy?.ImagePath,
+                                LikeCount = p.Post.LikeCount,
+                                DislikeCount = p.Post.DislikeCount,
+                                PostedImagePath = p.Post?.ImagePath
                             });
                     }
                     return posts;

@@ -1,4 +1,4 @@
-﻿<h3>ReportedPostComponent</h3>
+﻿<h3>Reported Posts</h3>
 @if (ReportedPosts != null)
 {
     @foreach (var post in ReportedPosts)
@@ -9,26 +9,75 @@
                     <div class="card mb-4">
                         <div class="card-header">
                             <div class="media flex-wrap w-100 align-items-center">
-                                <img src="https://i.imgur.com/iNmBizf.jpg" class="d-block ui-w-40 rounded-circle" alt="">
+                                <img src="@post.ImagePath" class="ui-w-40 rounded-circle d-none d-lg-block" alt="" width="64" height="64">
                                 <div class="media-body ml-3">
-                                    <a href="javascript:void(0)" data-abc="true">
+                                    <a href="Profile/@post.PostedBy" data-abc="true">
                                         @post.PostedBy
                                     </a>
                                     <div class="text-muted small">
-                                        @post.PostDate.ToShortDateString();
+                                        @post.PostDate.ToShortDateString()
                                     </div>
                                 </div>
                                 <div class="text-muted small ml-3">
-                                    <div>Member since <strong>01/1/2019</strong></div>
-                                    <div><strong>134</strong> posts</div>
+                                    <div>Member since <strong>@post.AccountCreated.ToShortDateString()</strong></div>
+                                    <div><strong>@post.PostCount</strong> posts</div>
                                 </div>
                             </div>
                         </div>
                         <div class="card-body">
-                            @post.Content
+                            @if (post.QuoteContent != null && post.QuotePostedBy != null)
+                            {
+                                <figure class="border p-2">
+                                    <blockquote class="blockquote">
+                                        <p class="text-muted">@post.QuoteContent</p>
+                                    </blockquote>
+                                    <figcaption class="blockquote-footer">
+                                        <cite title="Source Title">@post.QuotePostedBy</cite>
+                                    </figcaption>
+
+                                </figure>
+                            }
+                            @if (post.PostedImagePath != null)
+                            {
+                                <img src="@post.PostedImagePath" class="ui-w-40 rounded-circle d-none d-lg-block" alt="" width="64" height="64">
+                            }
+                            @if (ShowEditForm)
+                            {
+                                <EditForm Model="PostContent" OnSubmit="() => EditPost(post.Id)">
+                                    <div class="form-floating m-2">
+                                        <InputTextArea class="form-control" placeholder="Edit your post" style="height: 100px" @bind-Value="PostContent"></InputTextArea>
+                                        <button class="btn btn-primary btn-sm" type="submit">Submit</button>
+                                    </div>
+                                </EditForm>
+                            }
+                            else
+                            {
+                                @post.Content
+                            }
+                            <br />
+                            <br />
+                            <QuoteTreeContainer PostId="post.Id"></QuoteTreeContainer>
                         </div>
+
                         <div class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3">
-                        </div>
+                            <div class="px-4 pt-3">
+                                <a style="color: dodgerblue;"class="d-inline-flex align-items-center align-middle oi oi-thumb-up" data-abc="true">
+                                    <i class="fa fa-heart text-danger"></i>&nbsp; <span class="align-middle">@post.LikeCount</span>
+                                </a>
+                                <a style="color: firebrick;" class="d-inline-flex align-items-center align-middle oi oi-thumb-down" data-abc="true">
+                                    <i class="fa fa-heart text-danger"></i>&nbsp; <span class="align-middle">@post.DislikeCount</span>
+                                </a>
+                            </div>
+                            <div class="btn-group btn-group-sm pt-3 px-3">
+                                <AuthorizeView Roles="Administrators">
+                                    <Authorized>
+                                        <button type="button" class="btn btn-success" @onclick="() => DeleteReportedPost(post.Id)"><i class="oi oi-check"></i></button>
+                                        <button type="button" class="btn btn-danger" @onclick="() => DeletePost(post.Id)"><i class="oi oi-x"></i></button>
+                                        <button type="button" class="btn btn-primary" @onclick="() => ToggleEditForm(true)"><i class="oi oi-pencil"></i></button>
+                                    </Authorized>
+                                </AuthorizeView>
+                            </div>
+                        </div>           
                     </div>
                 </div>
             </div>
