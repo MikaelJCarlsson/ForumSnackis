@@ -2,58 +2,122 @@
 
 @if (UserName != null)
 {
-
-
-    <AuthorizeView>
+    <AuthorizeView Context="AuthContext">
         <Authorized>
             @if (UserData != null)
             {
-                <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+                <div class="container">
+                    <div class="row">
+                        @if (AuthContext.User.Identity.Name == UserName)
+                        {
+                            <div class="col-1">
+                                <button class="oi oi-cog btn btn-primary m-2 p-2" @onclick="() => ToggleEdit(true)"></button>
+                            </div>
+                        }
+                        <div class="col-4 p-0">
+                            @if (AuthContext.User.Identity.Name == UserName)
+                            {
+
+                                @if (ShowEditForm)
+                                {
+
+                                    <div class="card">
+                                        <div class="card-header ">
+                                            <h4>Change Password</h4>
+                                        </div>
+                                        <div class="card-body">
+                                            <EditForm Model="EditedUser" Context="PwContext">
+                                                <DataAnnotationsValidator />
+                                                <ValidationSummary />
+                                                <div class="form-group">
+                                                    <label>Old Password</label>
+                                                    <div>
+                                                        <InputText @bind-Value="EditedUser.OldPassword" type="password" DisplayName="Current Password"></InputText>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Confirm Password</label>
+                                                    <div>
+                                                        <InputText @bind-Value="EditedUser.CompareOldPassword" type="password" DisplayName="Confirm Password"></InputText>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>New Password</label>
+                                                    <div>
+                                                        <InputText @bind-Value="EditedUser.NewPassword" type="password" DisplayName="New Password"></InputText>
+                                                    </div>
+                                                </div>
+                                                <div class="card-footer">
+                                                    <button class="btn btn-success">Submit</button>
+                                                </div>
+                                            </EditForm>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                        <div class="col-7 p-0">
+                            <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
                               max-width: 300px;
                               margin: auto;
                               text-align: center;">
-                    <img src="@UserData.ImagePath" alt="" style="width:100%" />
-                    <h3>@UserData.UserName</h3>
-                    <div class="p-2">
-                        <figure class="border p-2">
-                            <blockquote class="blockquote">
-                                @if (UserData.UserBio == null)
+                                <img src="@UserData.ImagePath" alt="" style="width:100%" />
+                                <h3>@UserData.UserName</h3>
+                                <div class="p-2">
+                                    <figure class="border p-2">
+                                        <blockquote class="blockquote">
+                                            @if (AuthContext.User.Identity.Name == UserName && ShowEditForm)
+                                            {
+                                                <EditForm Model="EditedUser" OnSubmit="UpdateUserBio" Context="FormContext">
+                                                    <div class="form-group"></div>
+                                                    <label> Bio:</label>
+                                                    <div>
+                                                        <InputTextArea @bind-Value="EditedUser.UserBio" DisplayName="Bio"></InputTextArea>
+                                                    </div>
+                                                    <button class="btn btn-success">Submit</button>
+                                                </EditForm>
+                                            }
+
+                                            @if (UserData.UserBio == null && !ShowEditForm)
+                                            {
+                                                <small class="text-muted">
+                                                    Account created before Bio
+                                                </small>
+
+                                            }
+                                            else
+                                            { <small class="text-muted">
+                                                    @UserData.UserBio
+                                                </small>
+                                            }
+                                        </blockquote>
+                                    </figure>
+                                </div>
+                                @if (AuthContext.User.Identity.Name == UserName)
                                 {
-                                    <small>
-                                        <p class="text-muted">Account created before Bio</p>
-                                    </small>
+                                    <div class="input-group mt-2">
+
+                                        <div class="custom-file text-sm-left">
+                                            <InputFile class="custom-file-input" OnChange="OnChange" accept="image/png, image/jpeg, image/gif" id="inputFile" />
+                                            @if (filesBase64.Count == 0)
+                                            {
+                                                <label class="custom-file-label" for="inputFile">Upload Image</label>
+                                            }
+                                            else
+                                            {
+                                                <label class="custom-file-label" for="inputFile">@filesBase64.First().fileName</label>
+                                            }
+
+                                        </div>
+                                        <div class="input-group-append">
+                                            <button class="btn btn-success" @onclick="Upload" disabled="@isDisabled">Upload</button>
+                                        </div>
+                                    </div>
 
                                 }
-                                else
-                                { <small>
-                                        <p class="text-muted">@UserData.UserBio</p>
-                                    </small>
-                                }
-                            </blockquote>
-                        </figure>
-                    </div>
-                    @if (context.User.Identity.Name == UserName)
-                    {
-                        <div class="input-group mt-2">
-
-                            <div class="custom-file text-sm-left">
-                                <InputFile class="custom-file-input" OnChange="OnChange" accept="image/png, image/jpeg, image/gif" id="inputFile" />
-                                @if (filesBase64.Count == 0)
-                                {
-                                    <label class="custom-file-label" for="inputFile">Upload Image</label>
-                                }
-                                else
-                                {
-                                    <label class="custom-file-label" for="inputFile">@filesBase64.First().fileName</label>
-                                }
-
-                            </div>
-                            <div class="input-group-append">
-                                <button class="btn btn-success" @onclick="Upload" disabled="@isDisabled">Upload</button>
                             </div>
                         </div>
-
-                    }
+                    </div>
                 </div>
             }
         </Authorized>

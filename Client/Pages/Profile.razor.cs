@@ -20,6 +20,9 @@ namespace ForumSnackis.Client.Pages
         public UserDTO UserData { get; set; }
         [Inject]
         public IHttpClientFactory HttpFactory { get; set; }
+        public bool ShowEditForm { get; set; }
+        public bool ToggleControll { get; set; }
+        public UserDTO EditedUser { get; set; }
         protected override async Task OnParametersSetAsync()
         {
             var httpclient = HttpFactory.CreateClient("private");
@@ -27,6 +30,42 @@ namespace ForumSnackis.Client.Pages
             if (response.IsSuccessStatusCode)
             {
                 UserData = await response.Content.ReadFromJsonAsync<UserDTO>();
+            }
+        }
+        private async Task UpdateUserBio()
+        {
+            ShowEditForm = false;
+            ToggleControll = true;
+
+            var httpclient = HttpFactory.CreateClient("private");
+            var response = await httpclient.PutAsJsonAsync($"api/User/EditBio/{UserData.UserId}",EditedUser.UserBio);
+            if (response.IsSuccessStatusCode)
+            {
+                response = await httpclient.GetAsync($"api/User/{UserName}");
+                if (response.IsSuccessStatusCode)
+                {
+                    UserData = await response.Content.ReadFromJsonAsync<UserDTO>();
+                }
+            }
+        }
+        private void ToggleEdit(bool show)
+        {
+            if (show && !ToggleControll)
+            {
+                if(EditedUser is null)
+                {
+                    EditedUser = new();
+                    EditedUser.UserBio = "";
+                    EditedUser.UserId = UserData.UserId;
+                    
+                }
+                ShowEditForm = true;
+                ToggleControll = true;
+            }
+            else
+            {
+                ShowEditForm = false;
+                ToggleControll = false;
             }
         }
         async Task OnChange(InputFileChangeEventArgs e)

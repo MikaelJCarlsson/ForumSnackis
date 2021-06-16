@@ -27,6 +27,7 @@ namespace ForumSnackis.Server.Services
                 var user = new UserDTO
                 {
                     UserName = query.UserName,
+                    UserId = query.Id,
                     ImagePath = query.ImagePath,
                     JoinDate = query.RegistrationDate,
                     Posts = query.Posts.Count(),
@@ -62,6 +63,19 @@ namespace ForumSnackis.Server.Services
             {
                 return null;
             }
+        }
+
+        internal async Task<int> EditUserBioAsync(string id, string bio)
+        {
+            var user = await dbContext.Users.FindAsync(id);
+            if(user != null)
+            {
+                user.UserBio = bio;
+                dbContext.Update(user);
+                return await dbContext.SaveChangesAsync();
+            }
+            else
+            return 0;
         }
     }
 }

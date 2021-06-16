@@ -40,5 +40,15 @@ namespace ForumSnackis.Server.Controllers
             }
             return StatusCode(404);
         }
+        [HttpPut("EditBio/{id}")]
+        public async Task<IActionResult> EditBioAsync(string id,[FromBody] string bio)
+        {
+            var result = await service.EditUserBioAsync(id, bio);
+            if(result == 1)
+            {
+                return Ok();
+            }
+            return StatusCode(500);
+        }
     }
 }
