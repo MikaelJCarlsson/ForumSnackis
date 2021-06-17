@@ -31,6 +31,7 @@ public class UploadController : ControllerBase
 	{
 		await service.UploadFileAsync(files, User);
 	}
+
 	[HttpPost("{id}")]
 	[Authorize]
 	public async Task PostImage([FromBody] ImageFile[] files, int id)

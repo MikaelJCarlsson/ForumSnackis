@@ -9,11 +9,8 @@
 
 <NavLink href="@($"Topic/{Category.Id}")" class="list-group-item list-group-item-action bg-light" aria-current="false">
     <div class="d-flex w-100 justify-content-between">
-        <h5 class="mb-1">@Category.Title</h5>
-        <small>Last post 3 days ago</small>
-    </div>
-    <p class="mb-1">Some placeholder content in a paragraph.</p>
-    <small>And some small print.</small>
+        <h5 class="mb-1">@Category.Title</h5>     
+    </div>  
 </NavLink>
 
 <AuthorizeView Context="AuthContext" Roles="Administrators">

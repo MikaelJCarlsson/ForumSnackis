@@ -32,17 +32,17 @@ namespace ForumSnackis.Server.Services
 
             if (user.ImagePath == "https://cdn.frankerfacez.com/emoticon/447568/4")
             {
-                await File.WriteAllBytesAsync(env.ContentRootPath.Replace("Server", "Client/wwwroot") + relativePath, buf);
+                await File.WriteAllBytesAsync(env.WebRootPath + relativePath, buf);
                 user.ImagePath = relativePath;
                 dbContext.Update(user);
                 return await dbContext.SaveChangesAsync();
             }
             else
             {
-               
-                File.Delete(env.ContentRootPath.Replace("Server", "Client/wwwroot") + user.ImagePath);
+              
+                File.Delete(env.WebRootPath + user.ImagePath);
                 user.ImagePath = relativePath;
-                await File.WriteAllBytesAsync(env.ContentRootPath.Replace("Server", "Client/wwwroot") + relativePath, buf);
+                await File.WriteAllBytesAsync(env.WebRootPath + relativePath, buf);
                 dbContext.Update(user);
                 return await dbContext.SaveChangesAsync();
             }
@@ -58,7 +58,7 @@ namespace ForumSnackis.Server.Services
 
             if (post.ImagePath == null)
             {
-                await File.WriteAllBytesAsync(env.ContentRootPath.Replace("Server", "Client/wwwroot") + relativePath, buf);
+                await File.WriteAllBytesAsync(env.WebRootPath + relativePath, buf);
                 post.ImagePath = relativePath;
                 return await dbContext.SaveChangesAsync();
             }
